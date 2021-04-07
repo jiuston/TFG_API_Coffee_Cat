@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "familia")
 public class Familia {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_familia;
+    private Integer id_familia;
     private String nombre;
 
     @Column(name = "imagen" ,nullable = true)

@@ -1,11 +1,14 @@
 package com.CoffeeCat.modelo.producto;
 
+import com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator;
 import com.CoffeeCat.modelo.familia.Familia;
 import com.CoffeeCat.modelo.lineapedido.LineaPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,8 +20,16 @@ import java.util.List;
 @Table(name = "producto")
 public class Producto {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_producto;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Producto_seq")
+    @GenericGenerator(
+            name = "Producto_seq",
+            strategy = "com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator",
+            parameters = {
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "PROD"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
+            })
+    private String id;
     private String nombre;
     private String descripcion;
     private Float precio;

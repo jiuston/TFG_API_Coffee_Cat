@@ -1,8 +1,11 @@
 package com.CoffeeCat.modelo.gato;
 
+import com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,9 +16,16 @@ import java.util.Date;
 @Entity
 @Table(name = "gato")
 public class Gato {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_gato;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gato_seq")
+    @GenericGenerator(
+            name = "gato_seq",
+            strategy = "com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator",
+            parameters = {
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "GAT"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
+            })
+    private String id;
     private String nombre;
     private Date fecha_nacimiento;
 

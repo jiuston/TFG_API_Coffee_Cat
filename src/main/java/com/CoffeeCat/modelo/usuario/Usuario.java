@@ -1,10 +1,13 @@
 package com.CoffeeCat.modelo.usuario;
 
+import com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator;
 import com.CoffeeCat.modelo.pedido.Pedido;
 import com.CoffeeCat.modelo.reserva.Reserva;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +21,16 @@ import java.util.*;
 @Entity
 @Table(name = "usuario")
 public class Usuario implements UserDetails {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_usuario;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Usuario_seq")
+    @GenericGenerator(
+            name = "Usuario_seq",
+            strategy = "com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator",
+            parameters = {
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "US"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
+            })
+    private String id;
     private String nombre;
     @Column(unique = true)
     private String email;

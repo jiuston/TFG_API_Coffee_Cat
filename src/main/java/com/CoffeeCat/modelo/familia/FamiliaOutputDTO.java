@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FamiliaOutputDTO implements Serializable{
-    private Integer id_familia;
+    private String id;
     private String nombre;
     private byte[] imagen;
 

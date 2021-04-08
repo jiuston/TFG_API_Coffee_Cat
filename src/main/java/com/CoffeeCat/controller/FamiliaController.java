@@ -55,10 +55,10 @@ public class FamiliaController {
 
     }
 
-    @DeleteMapping("/familias/{id_familia}")
-    public ResponseEntity<?> deleteFamilia(@PathVariable Integer id_familia){
-        if (familiaService.findById(id_familia).isPresent()){
-            familiaService.deleteById(id_familia);
+    @DeleteMapping("/familias/{id}")
+    public ResponseEntity<?> deleteFamilia(@PathVariable String id){
+        if (familiaService.findById(id).isPresent()){
+            familiaService.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

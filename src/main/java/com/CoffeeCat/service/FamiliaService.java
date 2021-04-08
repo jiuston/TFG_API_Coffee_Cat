@@ -7,7 +7,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class FamiliaService extends BaseService<Familia, String, FamiliaRepository>{
 
-
-
-
 }

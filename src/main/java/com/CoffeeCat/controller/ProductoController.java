@@ -2,7 +2,6 @@ package com.CoffeeCat.controller;
 
 import com.CoffeeCat.modelo.familia.Familia;
 import com.CoffeeCat.modelo.producto.Producto;
-import com.CoffeeCat.modelo.producto.ProductoInputDTO;
 import com.CoffeeCat.modelo.producto.ProductoOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import com.CoffeeCat.service.ProductoService;
@@ -13,12 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})

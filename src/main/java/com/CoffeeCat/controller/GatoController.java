@@ -98,4 +98,16 @@ public class GatoController {
         }
     }
 
+    @DeleteMapping("/{id_gato}")
+    public ResponseEntity<?> deleteById(@PathVariable String id_gato){
+        Optional<Gato> gatoOPT = gatoService.findById(id_gato);
+        if (gatoOPT.isPresent()){
+            gatoService.deleteById(id_gato);
+            return ResponseEntity.status(HttpStatus.OK).body("Borrado el gato " + gatoOPT.get().getNombre());
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El gato con ID " + id_gato + " no se encontró");
+
+        }
+    }
+
 }

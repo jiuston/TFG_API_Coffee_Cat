@@ -43,7 +43,7 @@ public class FamiliaController {
         familia.setNombre(nombre);
         try {
             InputStream  inputStream = file.getInputStream();
-            byte[] bytesImagen= new byte[4096];
+            byte[] bytesImagen= new byte[inputStream.read()];
             inputStream.read(bytesImagen);
             familia.setImagen(bytesImagen);
             familiaService.save(familia);
@@ -53,6 +53,16 @@ public class FamiliaController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
+    }
+
+    @DeleteMapping("/familias/{id_familia}")
+    public ResponseEntity<?> deleteFamilia(@PathVariable Integer id_familia){
+        if (familiaService.findById(id_familia).isPresent()){
+            familiaService.deleteById(id_familia);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }

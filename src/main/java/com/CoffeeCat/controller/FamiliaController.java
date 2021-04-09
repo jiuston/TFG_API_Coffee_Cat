@@ -51,7 +51,6 @@ public class FamiliaController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
     }
 
     @DeleteMapping("/familias/{id}")

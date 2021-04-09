@@ -86,8 +86,6 @@ public class GatoController {
             Gato gato = gatoOPT.get();
             gato.setAdoptado(adoptado);
             if (fecha_adoptado!=null){
-                long milis= fecha_adoptado.getTime()+3600000;
-                fecha_adoptado = new Date(milis);
                 gato.setFecha_adoptado(fecha_adoptado);
             }
 

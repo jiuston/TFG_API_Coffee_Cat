@@ -5,6 +5,7 @@ import com.CoffeeCat.modelo.usuario.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -27,7 +28,10 @@ public class Reserva {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
             })
     private String id;
-    private Date fecha_reserva;
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+
+    private Double hora;
     private Float precio;
 
     @ManyToOne

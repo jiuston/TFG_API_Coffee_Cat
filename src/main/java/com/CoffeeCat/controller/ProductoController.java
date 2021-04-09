@@ -60,7 +60,7 @@ public class ProductoController {
             Producto producto = new Producto();
             producto.setFamilia(familiaOPT.get());
             try {
-                productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);
+              producto = productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);
                 productoService.save(producto);
                 return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
             } catch (IOException e) {

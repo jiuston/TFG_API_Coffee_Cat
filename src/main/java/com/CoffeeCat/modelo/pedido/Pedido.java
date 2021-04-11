@@ -29,7 +29,10 @@ public class Pedido {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
             })
     private String id;
-    private Date fecha_pedido;
+
+    @Temporal(TemporalType.DATE)
+    private String fecha;
+    private Double hora;
     private Float precio;
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
@@ -39,7 +42,7 @@ public class Pedido {
     @ManyToOne
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "lineaPedidoID.pedido")
+    @OneToMany(mappedBy = "lineaPedidoID.pedido", cascade = CascadeType.ALL)
     private List<LineaPedido> lineaPedido;
 
 }

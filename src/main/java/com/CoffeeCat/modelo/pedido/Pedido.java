@@ -30,7 +30,6 @@ public class Pedido {
             })
     private String id;
 
-    @Temporal(TemporalType.DATE)
     private String fecha;
     private Double hora;
     private Float precio;
@@ -42,7 +41,7 @@ public class Pedido {
     @ManyToOne
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "lineaPedidoID.pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<LineaPedido> lineaPedido;
 
 }

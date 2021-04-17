@@ -24,6 +24,7 @@ public class PedidoOutputDTO {
         this.setFecha_pedido(pedido.getFecha());
         this.setPrecio(pedido.getPrecio());
         this.setMetodoPago(pedido.getMetodoPago().getMetodo());
+        this.setId_usuario(pedido.getUsuario().getId());
     }
 
 }

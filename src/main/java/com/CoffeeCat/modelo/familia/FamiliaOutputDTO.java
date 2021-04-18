@@ -12,7 +12,6 @@ public class FamiliaOutputDTO implements Serializable{
     private String id;
     private String nombre;
     private String imagenUrl;
-    private byte[] imagen;
 
     public FamiliaOutputDTO(Familia familia){
         this.setId(familia.getId());

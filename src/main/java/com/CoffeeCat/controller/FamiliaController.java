@@ -18,7 +18,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PUT })
 public class FamiliaController {
 
-    private final String imagenUrl="/familias/imagen/";
+    private final String imagenUrl="https://coffee-cat.herokuapp.com/familias/imagen/";
 
     @Autowired
     private FamiliaService familiaService;
@@ -28,7 +28,9 @@ public class FamiliaController {
         List<Familia> familias=familiaService.findAll();
         List<FamiliaOutputDTO> familiasOutputDTO = new ArrayList<>();
         for (Familia familia : familias) {
-            familiasOutputDTO.add(new FamiliaOutputDTO(familia));
+            FamiliaOutputDTO familiaOutputDTO=new FamiliaOutputDTO(familia);
+            familiaOutputDTO.setImagenUrl(imagenUrl+familia.getId());
+            familiasOutputDTO.add(familiaOutputDTO);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(familiasOutputDTO);

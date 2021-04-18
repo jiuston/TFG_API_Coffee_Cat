@@ -4,6 +4,7 @@ import com.CoffeeCat.modelo.gato.Gato;
 import com.CoffeeCat.modelo.gato.GatoOutputDTO;
 import com.CoffeeCat.modelo.gato.Sexo;
 import com.CoffeeCat.service.GatoService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,7 @@ public class GatoController {
     }
 
     @PutMapping("/{id_gato}/estado")
-    public ResponseEntity<?> actualizarEstado(@PathVariable String id_gato, @RequestParam Boolean adoptado, @RequestParam @Nullable Date fecha_adoptado){
+    public ResponseEntity<?> actualizarEstado(@PathVariable String id_gato, @RequestParam Boolean adoptado, @RequestParam Date fecha_adoptado){
         Optional<Gato> gatoOPT = gatoService.findById(id_gato);
         if (gatoOPT.isPresent()){
             Gato gato = gatoOPT.get();

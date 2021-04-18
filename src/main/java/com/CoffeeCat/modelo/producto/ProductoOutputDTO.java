@@ -13,7 +13,7 @@ public class ProductoOutputDTO {
     private String nombre;
     private String desripcion;
     private Float precio;
-    private byte[] imagen;
+    private String imagenUrl;
     private Boolean activo;
 
     public ProductoOutputDTO(Producto producto){
@@ -21,7 +21,6 @@ public class ProductoOutputDTO {
         this.setNombre(producto.getNombre());
         this.setDesripcion(producto.getDescripcion());
         this.setPrecio(producto.getPrecio());
-        this.setImagen(producto.getImagen());
         this.setActivo(producto.getActivo());
 
     }

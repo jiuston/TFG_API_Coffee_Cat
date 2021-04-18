@@ -20,11 +20,20 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 @RequestMapping("/productos")
 public class ProductoController {
+
+    private final String imagenUrl="https://coffee-cat.herokuapp.com/productos/familia/imagen/";
+
     @Autowired
     private ProductoService productoService;
 
     @Autowired
     private FamiliaService familiaService;
+
+    private ProductoOutputDTO transformarProducto(Producto producto){
+        ProductoOutputDTO productoOutputDTO = new ProductoOutputDTO(producto);
+        productoOutputDTO.setImagenUrl(imagenUrl+producto.getId());
+        return productoOutputDTO;
+    }
 
     @GetMapping("/familia/{id_familia}")
     public ResponseEntity<?> getProductosPorFamilia(@PathVariable String id_familia) {
@@ -34,8 +43,7 @@ public class ProductoController {
             List<Producto> productos = productoService.findByFamilia(familiaOPT.get());
             List<ProductoOutputDTO> productosDTO = new ArrayList<>();
             for (Producto producto : productos) {
-                ProductoOutputDTO productoOutputDTO = new ProductoOutputDTO(producto);
-                productosDTO.add(productoOutputDTO);
+                productosDTO.add(transformarProducto(producto));
             }
             return ResponseEntity.status(HttpStatus.OK).body(productosDTO);
         } else {
@@ -43,13 +51,23 @@ public class ProductoController {
         }
     }
 
+    @GetMapping("/familia/imagen/{id_producto}")
+    public ResponseEntity<byte[]> getImagenProducto(@PathVariable String id_producto){
+        try {
+            Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
+            return ResponseEntity.status(HttpStatus.OK).body(producto.getImagen());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @GetMapping("/{id_producto}")
     public ResponseEntity<?> getProductoById(@PathVariable String id_producto) {
-        Optional<Producto> productoOPT = productoService.findById(id_producto);
-        if (productoOPT.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(productoOPT.get()));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encuentra el producto " + id_producto);
+        try {
+            Producto producto = productoService.findById(id_producto).orElseThrow(Exception::new);
+            return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -85,36 +103,29 @@ public class ProductoController {
 
     @PutMapping("/{id_producto}/estado")
     public ResponseEntity<?> cambiarEstadoProducto(@PathVariable String id_producto, @RequestParam Boolean activo){
-        Optional<Producto> productoOPT = productoService.findById(id_producto);
-        if (productoOPT.isPresent()) {
-            Producto producto = productoOPT.get();
+        try {
+            Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
             producto.setActivo(activo);
-            productoService.edit(producto);
-            return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto con id " + id_producto + " no encontrado");
+            return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
     }
 
     @PutMapping("/{id_producto}")
     public ResponseEntity<?> putProducto(@PathVariable String id_producto, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Float precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
-        Optional<Producto> productoOPT = productoService.findById(id_producto);
-        if (productoOPT.isPresent()) {
-            Producto producto = new Producto();
-            producto.setId(productoOPT.get().getId());
-            producto.setFamilia(productoOPT.get().getFamilia());
             try {
+                Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
                 productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);
                 productoService.save(producto);
-                return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
+                return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto con id " + id_producto + " no encontrado");
-        }
     }
-
 
 }

@@ -39,7 +39,7 @@ public class FamiliaController {
     @GetMapping("familias/imagen/{id_familia}")
     public ResponseEntity<byte[]> getImagenFamilias(@PathVariable String id_familia){
         try {
-            Familia familia=familiaService.findById(id_familia).orElseThrow(() ->new Exception("No se encontró familia con ID "+ id_familia));
+            Familia familia=familiaService.findById(id_familia).orElseThrow(Exception::new);
             return ResponseEntity.status(HttpStatus.OK).body(familia.getImagen());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

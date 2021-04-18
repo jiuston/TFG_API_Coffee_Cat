@@ -15,7 +15,7 @@ public class GatoOutputDTO {
     private String sexo;
     private String historia;
     private Boolean adoptado;
-    private byte[] imagen;
+    private String imagenUrl;
 
 
     public GatoOutputDTO(Gato gato){
@@ -24,7 +24,7 @@ public class GatoOutputDTO {
         this.setSexo(gato.getSexo().getSexo());
         this.setHistoria(gato.getHistoria());
         this.setAdoptado(gato.getAdoptado());
-        this.setImagen(gato.getImagen());
+
 
     }
 

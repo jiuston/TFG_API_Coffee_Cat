@@ -27,15 +27,17 @@ public class Gato {
             })
     private String id;
     private String nombre;
+    @Temporal(TemporalType.DATE)
     private Date fecha_nacimiento;
 
     @Enumerated(value = EnumType.STRING)
     private Sexo sexo;
     private String historia;
     private Boolean adoptado;
+    @Temporal(TemporalType.DATE)
     private Date fecha_adoptado;
 
-    @Column(name = "imagen" ,nullable = true)
+    @Column(name = "imagen")
     @Basic(optional = false, fetch = FetchType.EAGER)
     @Lob()
     private byte[] imagen;

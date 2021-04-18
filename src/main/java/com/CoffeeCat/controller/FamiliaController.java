@@ -1,7 +1,6 @@
 package com.CoffeeCat.controller;
 
 import com.CoffeeCat.modelo.familia.Familia;
-import com.CoffeeCat.modelo.familia.FamiliaDTOConverter;
 import com.CoffeeCat.modelo.familia.FamiliaOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +18,30 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PUT })
 public class FamiliaController {
 
-    @Autowired
-    private FamiliaService familiaService;
+    private final String imagenUrl="/familias/imagen/";
 
     @Autowired
-    private FamiliaDTOConverter familiaDTOConverter;
+    private FamiliaService familiaService;
 
     @GetMapping("/familias")
     public ResponseEntity<?> getFamilias(){
         List<Familia> familias=familiaService.findAll();
         List<FamiliaOutputDTO> familiasOutputDTO = new ArrayList<>();
         for (Familia familia : familias) {
-            familiasOutputDTO.add(familiaDTOConverter.convert(familia));
+            familiasOutputDTO.add(new FamiliaOutputDTO(familia));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(familiasOutputDTO);
+    }
+
+    @GetMapping("familias/imagen/{id_familia}")
+    public ResponseEntity<byte[]> getImagenFamilias(@PathVariable String id_familia){
+        try {
+            Familia familia=familiaService.findById(id_familia).orElseThrow(() ->new Exception("No se encontró familia con ID "+ id_familia));
+            return ResponseEntity.status(HttpStatus.OK).body(familia.getImagen());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping("/familias")

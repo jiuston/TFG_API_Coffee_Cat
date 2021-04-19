@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Controler {
 
     @GetMapping("/")
-    public void hola(HttpServletResponse response) throws IOException {
+    public void redirectToSwagger(HttpServletResponse response) throws IOException {
         response.sendRedirect("swagger-ui.html#/");
     }
 

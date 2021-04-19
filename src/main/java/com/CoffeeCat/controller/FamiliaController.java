@@ -4,11 +4,15 @@ import com.CoffeeCat.modelo.familia.Familia;
 import com.CoffeeCat.modelo.familia.FamiliaOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,11 +40,14 @@ public class FamiliaController {
         return ResponseEntity.status(HttpStatus.OK).body(familiasOutputDTO);
     }
 
-    @GetMapping("familias/imagen/{id_familia}")
+    @GetMapping(value="familias/imagen/{id_familia}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImagenFamilias(@PathVariable String id_familia){
         try {
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
             Familia familia=familiaService.findById(id_familia).orElseThrow(Exception::new);
-            return ResponseEntity.status(HttpStatus.OK).body(familia.getImagen());
+            byte[] imagen=familia.getImagen();
+            return new ResponseEntity<>(imagen, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -51,10 +58,8 @@ public class FamiliaController {
         Familia familia = new Familia();
         familia.setNombre(nombre);
         try {
-            InputStream  inputStream = file.getInputStream();
-            byte[] bytesImagen= new byte[inputStream.read()];
-            inputStream.read(bytesImagen);
-            familia.setImagen(bytesImagen);
+            byte [] byteArr=file.getBytes();
+            familia.setImagen(byteArr);
             familiaService.save(familia);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IOException e) {

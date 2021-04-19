@@ -29,8 +29,7 @@ public class Familia {
     private String id;
     private String nombre;
 
-    @Column(name = "imagen" ,nullable = true)
-    @Basic(optional = false, fetch = FetchType.EAGER)
+    @Column(name = "imagen" ,nullable = true,  length = 4096000)
     @Lob()
     private byte[] imagen;
     @OneToMany(mappedBy = "familia")

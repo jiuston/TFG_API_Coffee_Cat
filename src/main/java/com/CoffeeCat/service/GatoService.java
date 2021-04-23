@@ -19,9 +19,7 @@ public class GatoService extends BaseService<Gato, String, GatoRepository>{
         gato.setFecha_nacimiento(fecha_nacimiento);
         gato.setSexo(Sexo.getSexo(sexo));
         gato.setHistoria(historia);
-        InputStream inputStream = file.getInputStream();
-        byte[] bytesImagen= new byte[inputStream.read()];
-        inputStream.read(bytesImagen);
+        byte[] bytesImagen= file.getBytes();
         gato.setImagen(bytesImagen);
         return gato;
     }

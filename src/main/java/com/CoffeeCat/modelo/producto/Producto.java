@@ -34,8 +34,7 @@ public class Producto {
     private String descripcion;
     private Float precio;
 
-    @Column(name = "imagen" ,nullable = true)
-    @Basic(optional = false, fetch = FetchType.EAGER)
+    @Column(name = "imagen" , length = 4096000)
     @Lob()
     private byte[] imagen;
     private Boolean activo;

@@ -1,12 +1,15 @@
 package com.CoffeeCat.controller;
 
 import com.CoffeeCat.modelo.familia.Familia;
+import com.CoffeeCat.modelo.pedido.PedidoOutputDTO;
 import com.CoffeeCat.modelo.producto.Producto;
 import com.CoffeeCat.modelo.producto.ProductoOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import com.CoffeeCat.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,19 +24,12 @@ import java.util.Optional;
 @RequestMapping("/productos")
 public class ProductoController {
 
-    private final String imagenUrl="https://coffee-cat.herokuapp.com/productos/familia/imagen/";
 
     @Autowired
     private ProductoService productoService;
 
     @Autowired
     private FamiliaService familiaService;
-
-    private ProductoOutputDTO transformarProducto(Producto producto){
-        ProductoOutputDTO productoOutputDTO = new ProductoOutputDTO(producto);
-        productoOutputDTO.setImagenUrl(imagenUrl+producto.getId());
-        return productoOutputDTO;
-    }
 
     @GetMapping("/familia/{id_familia}")
     public ResponseEntity<?> getProductosPorFamilia(@PathVariable String id_familia) {
@@ -43,7 +39,7 @@ public class ProductoController {
             List<Producto> productos = productoService.findByFamilia(familiaOPT.get());
             List<ProductoOutputDTO> productosDTO = new ArrayList<>();
             for (Producto producto : productos) {
-                productosDTO.add(transformarProducto(producto));
+                productosDTO.add(new ProductoOutputDTO(producto));
             }
             return ResponseEntity.status(HttpStatus.OK).body(productosDTO);
         } else {
@@ -51,11 +47,14 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/familia/imagen/{id_producto}")
+    @GetMapping(value="/familia/imagen/{id_producto}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImagenProducto(@PathVariable String id_producto){
         try {
+            final HttpHeaders headers= new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
             Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
-            return ResponseEntity.status(HttpStatus.OK).body(producto.getImagen());
+            byte[] imagen= producto.getImagen();
+            return new ResponseEntity<>(imagen,headers,HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -65,7 +64,7 @@ public class ProductoController {
     public ResponseEntity<?> getProductoById(@PathVariable String id_producto) {
         try {
             Producto producto = productoService.findById(id_producto).orElseThrow(Exception::new);
-            return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
+            return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -106,7 +105,7 @@ public class ProductoController {
         try {
             Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
             producto.setActivo(activo);
-            return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
+            return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -119,7 +118,7 @@ public class ProductoController {
                 Producto producto=productoService.findById(id_producto).orElseThrow(Exception::new);
                 productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);
                 productoService.save(producto);
-                return ResponseEntity.status(HttpStatus.OK).body(transformarProducto(producto));
+                return ResponseEntity.status(HttpStatus.OK).body(new ProductoOutputDTO(producto));
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();

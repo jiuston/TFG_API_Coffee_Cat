@@ -22,7 +22,7 @@ public class ProductoOutputDTO {
         this.setDesripcion(producto.getDescripcion());
         this.setPrecio(producto.getPrecio());
         this.setActivo(producto.getActivo());
-
+        this.setImagenUrl("https://coffee-cat.herokuapp.com/productos/familia/imagen/"+producto.getId());
     }
 
 }

@@ -6,7 +6,9 @@ import com.CoffeeCat.modelo.gato.Sexo;
 import com.CoffeeCat.service.GatoService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,6 @@ import java.util.Optional;
 @RequestMapping("/gatos")
 public class GatoController {
 
-    private final String imagenUrl = "https://coffee-cat.herokuapp.com/gatos/imagen/";
 
     @Autowired
     private GatoService gatoService;
@@ -34,16 +35,19 @@ public class GatoController {
         List<Gato> gatos = gatoService.findAll();
         List<GatoOutputDTO> gatosOutputDTO = new ArrayList<>();
         for (Gato gato : gatos) {
-            gatosOutputDTO.add(transformarGato(gato));
+            gatosOutputDTO.add(new GatoOutputDTO(gato));
         }
         return ResponseEntity.status(HttpStatus.OK).body(gatosOutputDTO);
     }
 
-    @GetMapping("/imagen/{id_gato}")
+    @GetMapping(value = "/imagen/{id_gato}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImagenGato(@PathVariable String id_gato) {
         try {
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
-            return ResponseEntity.status(HttpStatus.OK).body(gato.getImagen());
+            byte[] imagen = gato.getImagen();
+            return new ResponseEntity<>(imagen,headers,HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -53,33 +57,20 @@ public class GatoController {
     public ResponseEntity<?> getGatoById(@PathVariable String id_gato) {
         try {
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
-            return ResponseEntity.status(HttpStatus.OK).body(transformarGato(gato));
+            return ResponseEntity.status(HttpStatus.OK).body(new GatoOutputDTO(gato));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    private GatoOutputDTO transformarGato(Gato gato) {
-        GatoOutputDTO gatoOutputDTO = new GatoOutputDTO(gato);
-        gatoOutputDTO.setImagenUrl(imagenUrl + gato.getId());
-        return gatoOutputDTO;
-    }
-
     @PostMapping("")
     public ResponseEntity<?> postGato(@RequestParam String nombre, Date fecha_nacimiento, @RequestParam String sexo, @RequestParam String historia, @RequestParam MultipartFile file) {
         Gato gato = new Gato();
-        gato.setNombre(nombre);
-        gato.setSexo(Sexo.getSexo(sexo));
-        gato.setHistoria(historia);
         gato.setAdoptado(false);
-        gato.setFecha_nacimiento(fecha_nacimiento);
         try {
-            InputStream inputStream = file.getInputStream();
-            byte[] bytesImagen = new byte[inputStream.read()];
-            inputStream.read(bytesImagen);
-            gato.setImagen(bytesImagen);
+            gatoService.crearGato(gato, nombre, fecha_nacimiento, sexo, historia, file);
             gatoService.save(gato);
-            return ResponseEntity.status(HttpStatus.OK).body(transformarGato(gato));
+            return ResponseEntity.status(HttpStatus.OK).body(new GatoOutputDTO(gato));
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -110,7 +101,7 @@ public class GatoController {
                 gato.setFecha_adoptado(fecha_adoptado);
             }
             gatoService.edit(gato);
-            return ResponseEntity.status(HttpStatus.OK).body(transformarGato(gato));
+            return ResponseEntity.status(HttpStatus.OK).body(new GatoOutputDTO(gato));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

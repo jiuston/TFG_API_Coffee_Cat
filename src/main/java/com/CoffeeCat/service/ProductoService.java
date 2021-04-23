@@ -23,9 +23,7 @@ public class ProductoService extends BaseService<Producto, String, ProductoRepos
         producto.setDescripcion(descripcion);
         producto.setPrecio(precio);
         producto.setActivo(activo);
-        InputStream inputStream = file.getInputStream();
-        byte[] bytesImagen= new byte[inputStream.read()];
-        inputStream.read(bytesImagen);
+        byte[] bytesImagen=file.getBytes();
         producto.setImagen(bytesImagen);
         return producto;
     }

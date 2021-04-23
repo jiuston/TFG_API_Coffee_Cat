@@ -29,7 +29,7 @@ public class Familia {
     private String id;
     private String nombre;
 
-    @Column(name = "imagen" ,nullable = true,  length = 4096000)
+    @Column(name = "imagen" , length = 4096000)
     @Lob()
     private byte[] imagen;
     @OneToMany(mappedBy = "familia")

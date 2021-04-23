@@ -37,8 +37,7 @@ public class Gato {
     @Temporal(TemporalType.DATE)
     private Date fecha_adoptado;
 
-    @Column(name = "imagen")
-    @Basic(optional = false, fetch = FetchType.EAGER)
+    @Column(name = "imagen" , length = 4096000)
     @Lob()
     private byte[] imagen;
 }

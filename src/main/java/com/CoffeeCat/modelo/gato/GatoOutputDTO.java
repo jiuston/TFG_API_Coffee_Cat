@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class GatoOutputDTO {
 
+    private String id;
     private String nombre;
     private Date fecha_nacimiento;
     private String sexo;
@@ -19,11 +20,13 @@ public class GatoOutputDTO {
 
 
     public GatoOutputDTO(Gato gato){
+        this.setId(gato.getId());
         this.setNombre(gato.getNombre());
         this.setFecha_nacimiento(gato.getFecha_nacimiento());
         this.setSexo(gato.getSexo().getSexo());
         this.setHistoria(gato.getHistoria());
         this.setAdoptado(gato.getAdoptado());
+        this.setImagenUrl("https://coffee-cat.herokuapp.com/gatos/imagen/"+ gato.getId());
 
 
     }

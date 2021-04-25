@@ -73,7 +73,7 @@ public class GatoController {
     }
 
     @PutMapping("/{id_gato}")
-    public ResponseEntity<?> modificarGato(@PathVariable String id_gato, @RequestParam String nombre, @RequestParam Date fecha_nacimiento, @RequestParam String sexo, @RequestParam String historia, @RequestParam MultipartFile file) {
+    public ResponseEntity<?> modificarGato(@PathVariable String id_gato, String nombre,  Date fecha_nacimiento,  String sexo,  String historia,  MultipartFile file) {
         try {
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
             gatoService.crearGato(gato, nombre, fecha_nacimiento, sexo, historia, file);

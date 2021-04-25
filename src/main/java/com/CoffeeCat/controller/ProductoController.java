@@ -89,7 +89,7 @@ public class ProductoController {
         }
     }
 
-    /*@DeleteMapping("/{id_producto}")
+    @DeleteMapping("/{id_producto}")
     public ResponseEntity<?> deleteProducto(@PathVariable String id_producto) {
         Optional<Producto> productoOPT = productoService.findById(id_producto);
         if (productoOPT.isPresent()) {
@@ -98,7 +98,7 @@ public class ProductoController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encuentra el producto " + id_producto);
         }
-    }*/
+    }
 
     @PutMapping("/{id_producto}/estado")
     public ResponseEntity<?> cambiarEstadoProducto(@PathVariable String id_producto, @RequestParam Boolean activo){

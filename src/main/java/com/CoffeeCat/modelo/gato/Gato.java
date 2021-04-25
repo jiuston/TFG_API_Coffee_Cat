@@ -32,6 +32,7 @@ public class Gato {
 
     @Enumerated(value = EnumType.STRING)
     private Sexo sexo;
+    @Column(length = 1000)
     private String historia;
     private Boolean adoptado;
     @Temporal(TemporalType.DATE)

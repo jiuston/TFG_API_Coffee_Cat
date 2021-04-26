@@ -1,5 +1,6 @@
 package com.CoffeeCat.modelo.pedido;
 
+import com.CoffeeCat.modelo.lineapedido.LineaPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +19,7 @@ public class PedidoOutputDTO {
     private Float precio;
     private String metodoPago;
     private String id_usuario;
+    private List<LineaPedido> lineas;
 
     public PedidoOutputDTO(Pedido pedido){
         if (pedido==null) return;
@@ -25,6 +28,7 @@ public class PedidoOutputDTO {
         this.setPrecio(pedido.getPrecio());
         this.setMetodoPago(pedido.getMetodoPago().getMetodo());
         this.setId_usuario(pedido.getUsuario().getId());
+        this.setLineas(pedido.getLineaPedido());
     }
 
 }

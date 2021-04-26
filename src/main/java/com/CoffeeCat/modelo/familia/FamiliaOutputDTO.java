@@ -11,11 +11,12 @@ import java.io.Serializable;
 public class FamiliaOutputDTO implements Serializable{
     private String id;
     private String nombre;
-    private String imagenUrl;
+    private String imagenUrl="https://coffee-cat.herokuapp.com/familias/imagen/";
 
     public FamiliaOutputDTO(Familia familia){
         this.setId(familia.getId());
         this.setNombre(familia.getNombre());
+        this.setImagenUrl("https://coffee-cat.herokuapp.com/familias/imagen/" + familia.getId());
     }
 
 }

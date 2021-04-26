@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PUT })
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class UsuarioController {
 
     @Autowired
@@ -21,12 +21,12 @@ public class UsuarioController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuarios/{id_usuario}")
-    public ResponseEntity<?> getUsuarioById(@PathVariable String id_usuario){
-        Optional<Usuario> usuarioOPT = usuarioService.findById(id_usuario);
-        if (usuarioOPT.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(new UsuarioOutputDTO(usuarioOPT.get()));
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario con id " + id_usuario + " no existe");
+    public ResponseEntity<?> getUsuarioById(@PathVariable String id_usuario) {
+        try {
+            Usuario usuario = usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario con id " + id_usuario + " no existe"));
+            return ResponseEntity.status(HttpStatus.OK).body(new UsuarioOutputDTO(usuario));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -36,10 +36,13 @@ public class UsuarioController {
     }*/
 
     @PostMapping("/register")
-    public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuario){
-        Optional<Usuario> usuarioOPT = usuarioService.findByEmail(usuario.getEmail());
-        if (usuarioOPT.isPresent()) return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un usuario con este email");
-        Usuario nuevoUsuario = usuario.usuario();
+    public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
+        try {
+            usuarioService.findByEmail(usuarioRegistro.getEmail()).orElseThrow(() -> new Exception("Usuario con email " + usuarioRegistro.getEmail() + " ya existe"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        Usuario nuevoUsuario = usuarioRegistro.usuario();
         Set<Rol> roles = new HashSet<>();
         roles.add(Rol.USER);
         nuevoUsuario.setRoles(roles);
@@ -49,13 +52,13 @@ public class UsuarioController {
 
 
     @DeleteMapping("usuario/{id_usuario}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable String id_usuario){
-        Optional<Usuario> usuarioOPT = usuarioService.findById(id_usuario);
-        if (usuarioOPT.isPresent()){
-            usuarioService.deleteById(id_usuario);
+    public ResponseEntity<?> deleteUsuario(@PathVariable String id_usuario) {
+        try {
+            Usuario usuario = usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario con id " + id_usuario + " no existe"));
+            usuarioService.delete(usuario);
             return ResponseEntity.status(HttpStatus.OK).body("Se ha borrado al usuario con id " + id_usuario);
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado al usuario con id " + id_usuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

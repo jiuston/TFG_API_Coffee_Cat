@@ -29,7 +29,6 @@ public class ReservaController {
     @Autowired
     private UsuarioService usuarioService;
 
-
     @GetMapping("")
     public ResponseEntity<?> getReservasByFecha(@RequestParam String fecha){
         try {
@@ -57,17 +56,13 @@ public class ReservaController {
                 }
             }
             Reserva reserva = reservaInputDTO.reserva();
-            Optional<Usuario> usuarioOPT = usuarioService.findById(reservaInputDTO.getId_usuario());
-            if (usuarioOPT.isPresent()){
-                reserva.setUsuario(usuarioOPT.get());
+            Usuario usuario= usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
+                reserva.setUsuario(usuario);
                 reservaService.save(reserva);
                 return ResponseEntity.status(HttpStatus.OK).body(new ReservaOutPutDTO(reserva));
-            }else{
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El usuario que ha hecho la reserva no existe.");
-            }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
 
     }

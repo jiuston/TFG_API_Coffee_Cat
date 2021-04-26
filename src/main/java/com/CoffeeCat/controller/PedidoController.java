@@ -47,14 +47,12 @@ public class PedidoController {
 
     @GetMapping("/{id_pedido}/usuario/{id_usuario}")
     public ResponseEntity<?> getPedidoById(@PathVariable String id_pedido, @PathVariable String id_usuario) {
-        Optional<Usuario> usuarioOPT = usuarioService.findById(id_usuario);
-        if (!usuarioOPT.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado un usario con esa ID");
-        Optional<Pedido> pedidoOPT = pedidoService.findById(id_pedido);
-        if (pedidoOPT.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedidoOPT.get()));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado un pedido con ese número.");
+        try {
+            Usuario usuario = usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
+            Pedido pedido = pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido no encontrado"));
+            return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedido));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -67,7 +65,7 @@ public class PedidoController {
             pedido.setUsuario(usuario);
             pedidoService.save(pedido);
             List<LineaPedidoInputDTO> lineas = pedidoInputDTO.getLineas();
-            int numLinea=1;
+            int numLinea = 1;
             for (LineaPedidoInputDTO linea : lineas) {
                 Producto producto = productoService.findById(linea.getId_producto()).orElseThrow(() -> new Exception("No existe el producto " + linea.getId_producto()));
                 LineaPedido lineaPedido = new LineaPedido();
@@ -88,29 +86,27 @@ public class PedidoController {
 
     @PutMapping("/{id_pedido")
     public ResponseEntity<?> cambiarEstadoPedido(@PathVariable String id_pedido) {
-        Optional<Pedido> pedidoOPT = pedidoService.findById(id_pedido);
-        if (pedidoOPT.isPresent()) {
-            Pedido pedido = pedidoOPT.get();
+        try {
+            Pedido pedido = pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
             pedido.setEntregado(true);
             pedidoService.save(pedido);
             return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedido));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró un pedido con ese número");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id_pedido")
     public ResponseEntity<?> borrarPedido(@PathVariable String id_pedido) {
-        Optional<Pedido> pedidoOPT = pedidoService.findById(id_pedido);
-        if (pedidoOPT.isPresent()) {
-            if (pedidoOPT.get().getEntregado()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede borrar un pedido que ya se ha entregado.");
-            } else {
+        try {
+            Pedido pedido = pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
+            if (pedido.getEntregado()) throw new Exception("No se puede borrar un pedido que ya se ha entregado.");
+            else {
                 pedidoService.deleteById(id_pedido);
                 return ResponseEntity.status(HttpStatus.OK).body("Borrado el pedido " + id_pedido);
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró un pedido con ese número");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.CoffeeCat.modelo.reserva;
 
+import com.CoffeeCat.modelo.usuario.Usuario;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ public class ReservaOutPutDTO {
     private String fecha;
     private Double hora;
     private Float precio;
-    private String id_usuario;
+    private Usuario usuario;
 
     public ReservaOutPutDTO(Reserva reserva){
         if (reserva==null) return;
@@ -23,7 +24,7 @@ public class ReservaOutPutDTO {
         this.setFecha(sdf.format(reserva.getFecha()));
         this.setHora(reserva.getHora());
         this.setPrecio(reserva.getPrecio());
-        this.setId_usuario(reserva.getUsuario().getId());
+        this.setUsuario(reserva.getUsuario());
 
     }
 

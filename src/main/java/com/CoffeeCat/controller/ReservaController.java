@@ -9,7 +9,6 @@ import com.CoffeeCat.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -30,12 +29,12 @@ public class ReservaController {
     private UsuarioService usuarioService;
 
     @GetMapping("")
-    public ResponseEntity<?> getReservasByFecha(@RequestParam String fecha){
+    public ResponseEntity<?> getReservasByFecha(@RequestParam String fecha) {
         try {
-            Date fechaBuscada=new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
+            Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
             List<ReservaOutPutDTO> reservasDTO = new ArrayList<>();
-            for (Reserva reserva: reservas) {
+            for (Reserva reserva : reservas) {
                 reservasDTO.add(new ReservaOutPutDTO(reserva));
             }
             return ResponseEntity.status(HttpStatus.OK).body(reservasDTO);
@@ -45,21 +44,39 @@ public class ReservaController {
         }
     }
 
-    @PostMapping("")
-    public ResponseEntity<?> postReserva(@RequestBody ReservaInputDTO reservaInputDTO){
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<?> getReservaByUsuario(@PathVariable String idUsuario) {
         try {
+            Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con encontrado con el id " + idUsuario));
+            Optional<Reserva> reservaOPT = reservaService.findByUsuario(usuario);
+            if (reservaOPT.isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(reservaOPT.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> postReserva(@RequestBody ReservaInputDTO reservaInputDTO) {
+        try {
+            Usuario usuario = usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
+            Reserva reserva = reservaService.findByUsuario(usuario).orElse(null);
+            if (reserva != null) throw new Exception("Este usuario ya tiene una reserva");
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(reservaInputDTO.getFecha());
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
-            for (Reserva reserva: reservas){
-                if (reserva.getHora().equals(reservaInputDTO.getHora())){
+            for (Reserva r : reservas) {
+                if (r.getHora().equals(reservaInputDTO.getHora())) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("Esa hora ya está reservada");
                 }
             }
-            Reserva reserva = reservaInputDTO.reserva();
-            Usuario usuario= usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
-                reserva.setUsuario(usuario);
-                reservaService.save(reserva);
-                return ResponseEntity.status(HttpStatus.OK).body(new ReservaOutPutDTO(reserva));
+            reserva = reservaInputDTO.reserva();
+
+            reserva.setUsuario(usuario);
+            reservaService.save(reserva);
+            return ResponseEntity.status(HttpStatus.OK).body(new ReservaOutPutDTO(reserva));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -68,20 +85,14 @@ public class ReservaController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteReserva(@RequestParam String fecha, @RequestParam Double hora){
+    public ResponseEntity<?> deleteReserva(@RequestParam String idUsuario) {
         try {
-            Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
-            List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
-            for (Reserva reserva: reservas){
-                if (reserva.getHora().equals(hora)){
-                    reservaService.delete(reserva);
-                    return ResponseEntity.status(HttpStatus.OK).body("Borrada la reserva del dia " + fecha + " " + hora);
-                }
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La reserva no existe.");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no encontrado"));
+            Reserva reserva = reservaService.findByUsuario(usuario).orElseThrow(() -> new Exception("Este usuario no tiene reservas"));
+            reservaService.delete(reserva);
+            return ResponseEntity.status(HttpStatus.OK).body("Borrada la reserva de " + usuario.getNombre());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
 
     }

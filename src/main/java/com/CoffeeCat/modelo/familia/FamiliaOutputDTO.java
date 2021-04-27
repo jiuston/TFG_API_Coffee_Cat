@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class FamiliaOutputDTO implements Serializable{
     private String id;
     private String nombre;
-    private String imagenUrl="https://coffee-cat.herokuapp.com/familias/imagen/";
+    private String imagenUrl;
 
     public FamiliaOutputDTO(Familia familia){
         this.setId(familia.getId());

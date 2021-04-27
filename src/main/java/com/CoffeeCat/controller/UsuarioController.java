@@ -38,16 +38,14 @@ public class UsuarioController {
     @PostMapping("/register")
     public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
         try {
-            usuarioService.findByEmail(usuarioRegistro.getEmail()).orElseThrow(() -> new Exception("Usuario con email " + usuarioRegistro.getEmail() + " ya existe"));
+            if(usuarioService.findByEmail(usuarioRegistro.getEmail()).isPresent()) throw new Exception("Un usuario con este email ya existe");
+            Usuario nuevoUsuario = usuarioRegistro.usuario();
+            nuevoUsuario= usuarioService.createUsuario(nuevoUsuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioOutputDTO(nuevoUsuario));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        Usuario nuevoUsuario = usuarioRegistro.usuario();
-        Set<Rol> roles = new HashSet<>();
-        roles.add(Rol.USER);
-        nuevoUsuario.setRoles(roles);
-        usuarioService.save(nuevoUsuario);
-        return ResponseEntity.status(HttpStatus.OK).body(new UsuarioOutputDTO(nuevoUsuario));
+
     }
 
 

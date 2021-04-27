@@ -38,8 +38,6 @@ public class Usuario implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Rol> roles;
-    @Temporal(TemporalType.DATE)
-    private Date fecha_nacimiento;
     private String comentario_admin;
 
     @OneToMany(mappedBy = "usuario")

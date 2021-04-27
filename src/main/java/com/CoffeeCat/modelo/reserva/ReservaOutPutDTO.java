@@ -15,7 +15,7 @@ public class ReservaOutPutDTO {
     private String fecha;
     private Double hora;
     private Float precio;
-    private Usuario usuario;
+    private String id_usuario;
 
     public ReservaOutPutDTO(Reserva reserva){
         if (reserva==null) return;
@@ -24,7 +24,7 @@ public class ReservaOutPutDTO {
         this.setFecha(sdf.format(reserva.getFecha()));
         this.setHora(reserva.getHora());
         this.setPrecio(reserva.getPrecio());
-        this.setUsuario(reserva.getUsuario());
+        this.setId_usuario(reserva.getUsuario().getId());
 
     }
 

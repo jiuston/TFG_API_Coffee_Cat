@@ -4,6 +4,7 @@ import com.CoffeeCat.modelo.usuario.Rol;
 import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 public class UsuarioService extends BaseService<Usuario,String, UsuarioRepository> {
 
     private UsuarioRepository usuarioRepository;
+    @Lazy
     private PasswordEncoder passwordEncoder;
 
     public Optional<Usuario> findByEmail(String email){return usuarioRepository.findByEmail(email);}
@@ -24,7 +26,7 @@ public class UsuarioService extends BaseService<Usuario,String, UsuarioRepositor
     public Usuario createUsuario(Usuario usuario){
         Set<Rol> roles = new HashSet<Rol>();
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        if (usuario.getRoles().size() == 0) {
+        if (usuario.getRoles().size() == 0 || usuario.getRoles() == null) {
             roles.add(Rol.USER);
             usuario.setRoles(roles);
         }

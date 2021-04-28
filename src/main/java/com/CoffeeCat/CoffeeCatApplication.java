@@ -21,10 +21,6 @@ public class CoffeeCatApplication implements CommandLineRunner {
 	@Autowired
 	private UsuarioService usuarioService;
 
-	@Autowired
-	@Lazy
-	PasswordEncoder passwordEncoder;
-
 	public static void main(String[] args) {
 		SpringApplication.run(CoffeeCatApplication.class, args);
 	}

@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class UsuarioController {
@@ -30,17 +33,6 @@ public class UsuarioController {
         }
     }
 
-    /*@PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UsuarioInputLoginDTO usuarioInput){
-
-
-
-        //TODO   Todo fue bien
-        String uuid= UUID.randomUUID().toString();
-        claseValidacion.getValidacion().put(usuarioInput.getEmail(), uuid);
-        return ResponseEntity.status(HttpStatus.OK).body(uuid);
-    }*/
-
     @PostMapping("/register")
     public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
         try {
@@ -54,8 +46,18 @@ public class UsuarioController {
 
     }
 
+    @GetMapping("/usuarios")
+    public ResponseEntity<?> getUsuarios(){
+        List<Usuario> usuarios = usuarioService.findAll();
+        List<UsuarioOutputDTO> usuarioOutputDTOS= new ArrayList<>();
+        for (Usuario u :
+                usuarios) {
+            usuarioOutputDTOS.add(new UsuarioOutputDTO(u));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioOutputDTOS);
+    }
 
-    @DeleteMapping("usuario/")
+    @DeleteMapping("/usuarios")
     public ResponseEntity<?> deleteUsuarioByEmail(@RequestParam String email) {
         try {
             Usuario usuario = usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con id " + email + " no existe"));

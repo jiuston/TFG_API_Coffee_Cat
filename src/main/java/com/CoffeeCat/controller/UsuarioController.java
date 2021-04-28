@@ -1,5 +1,6 @@
 package com.CoffeeCat.controller;
 
+import com.CoffeeCat.configurations.security.ClaseValidacion;
 import com.CoffeeCat.modelo.usuario.*;
 import com.CoffeeCat.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ClaseValidacion claseValidacion;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuarios/{id_usuario}")
@@ -30,9 +30,15 @@ public class UsuarioController {
         }
     }
 
-    /*@GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UsuarioInputLoginDTO usuarioInput){
-        Usuario usuarioOPT = usuarioService.findByEmail(usuarioInput.getEmail());
+    /*@PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UsuarioInputLoginDTO usuarioInput){
+
+
+
+        //TODO   Todo fue bien
+        String uuid= UUID.randomUUID().toString();
+        claseValidacion.getValidacion().put(usuarioInput.getEmail(), uuid);
+        return ResponseEntity.status(HttpStatus.OK).body(uuid);
     }*/
 
     @PostMapping("/register")
@@ -49,12 +55,12 @@ public class UsuarioController {
     }
 
 
-    @DeleteMapping("usuario/{id_usuario}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable String id_usuario) {
+    @DeleteMapping("usuario/")
+    public ResponseEntity<?> deleteUsuarioByEmail(@RequestParam String email) {
         try {
-            Usuario usuario = usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario con id " + id_usuario + " no existe"));
+            Usuario usuario = usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con id " + email + " no existe"));
             usuarioService.delete(usuario);
-            return ResponseEntity.status(HttpStatus.OK).body("Se ha borrado al usuario con id " + id_usuario);
+            return ResponseEntity.status(HttpStatus.OK).body("Se ha borrado al usuario con email " + email);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

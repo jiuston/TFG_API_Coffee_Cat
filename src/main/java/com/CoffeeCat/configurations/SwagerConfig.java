@@ -27,4 +27,49 @@ public class SwagerConfig {
                 .description("Aplicación destinada a la cafetería CoffeeCat, Logroño").version("0.1")
                 .contact(new Contact("Miguel","", "dam17.2020.jesuitas@gmail.com")).build();
     }
+   /* @Bean
+    public Docket eDesignApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .ignoredParameterTypes(Principal.class)
+                .globalOperationParameters(
+                        Arrays.asList(
+                                new ParameterBuilder()
+                                        .name("Authorization")
+                                        .description("Authorization")
+                                        .modelRef(new ModelRef("string"))
+                                        .parameterType("header")
+                                        .required(false)
+                                        .build()))
+                .enable(true)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.CoffeeCat"))
+                .paths(PathSelectors.any())
+                .build()
+                .pathMapping("/")
+                .directModelSubstitute(LocalDate.class, String.class)
+                .genericModelSubstitutes(ResponseEntity.class)
+                .useDefaultResponseMessages(false)
+                .enableUrlTemplating(false);
+    }
+
+    @Bean
+    UiConfiguration uiConfig() {
+        return UiConfigurationBuilder.builder()
+                .deepLinking(false)
+                .displayOperationId(Boolean.FALSE)
+                .defaultModelsExpandDepth(1)
+                .defaultModelExpandDepth(1)
+                .defaultModelRendering(ModelRendering.EXAMPLE)
+                .displayRequestDuration(true)
+                .docExpansion(DocExpansion.NONE)
+                .filter(false)
+                .maxDisplayedTags(0)
+                .operationsSorter(OperationsSorter.ALPHA)
+                .showExtensions(false)
+                .tagsSorter(TagsSorter.ALPHA)
+                .supportedSubmitMethods(UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS)
+                .validatorUrl(null)
+                .build();
+    }*/
 }

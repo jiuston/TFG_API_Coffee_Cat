@@ -18,7 +18,7 @@ public class UsuarioRegistroInputDTO {
         usuario.setNombre(this.getNombre());
         usuario.setEmail(this.getEmail());
         usuario.setPassword(this.getPassword());
-        usuario.setRoles(new HashSet<Rol>());
+        usuario.setRoles(new HashSet<>());
         return usuario;
     }
 }

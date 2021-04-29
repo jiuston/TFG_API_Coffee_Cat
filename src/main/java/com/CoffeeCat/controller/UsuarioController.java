@@ -1,6 +1,5 @@
 package com.CoffeeCat.controller;
 
-import com.CoffeeCat.configurations.security.ClaseValidacion;
 import com.CoffeeCat.modelo.usuario.*;
 import com.CoffeeCat.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
-    @Autowired
-    private ClaseValidacion claseValidacion;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuarios/{id_usuario}")

@@ -29,10 +29,11 @@ public class Pedido {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
             })
     private String id;
-
-    private String fecha;
-    private Double hora;
-    private Float precio;
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+    private String hora;
+    private String minutos;
+    private Double precio;
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 

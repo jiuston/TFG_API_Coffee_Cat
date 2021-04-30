@@ -39,10 +39,10 @@ public class AuthenticationController {
     public UsuarioOutputDTO me(@AuthenticationPrincipal Usuario usuario){
         return new UsuarioOutputDTO(usuario);
     }
+
     private JwtUserResponse convertUserEntityAndTokenToJwtUserResponse(Usuario user, String jwtToken) {
         return JwtUserResponse
                 .jwtUserResponseBuilder()
-                .email(user.getEmail())
                 .roles(user.getRoles())
                 .token(jwtToken)
                 .build();

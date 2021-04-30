@@ -13,8 +13,9 @@ public class ReservaOutPutDTO {
 
     private String id;
     private String fecha;
-    private Double hora;
-    private Float precio;
+    private String hora;
+    private String minutos;
+    private Double precio;
     private String id_usuario;
 
     public ReservaOutPutDTO(Reserva reserva){
@@ -23,6 +24,7 @@ public class ReservaOutPutDTO {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.setFecha(sdf.format(reserva.getFecha()));
         this.setHora(reserva.getHora());
+        this.setMinutos(reserva.getMinutos());
         this.setPrecio(reserva.getPrecio());
         this.setId_usuario(reserva.getUsuario().getId());
 

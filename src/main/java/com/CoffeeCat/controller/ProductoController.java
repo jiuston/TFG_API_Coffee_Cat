@@ -69,7 +69,7 @@ public class ProductoController {
     }
 
     @PostMapping("/familia/{id_familia}")
-    public ResponseEntity<?> postProducto(@PathVariable String id_familia, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Float precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> postProducto(@PathVariable String id_familia, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Double precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
         try {
             Familia familia = familiaService.findById(id_familia).orElseThrow(() -> new Exception("Familia con id " + id_familia + " no encontrada"));
             Producto producto = new Producto();
@@ -107,7 +107,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{id_producto}")
-    public ResponseEntity<?> putProducto(@PathVariable String id_producto, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Float precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> putProducto(@PathVariable String id_producto, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Double precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
         try {
             Producto producto = productoService.findById(id_producto).orElseThrow(() -> new Exception("No se encontró producto con id " + id_producto));
             productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);

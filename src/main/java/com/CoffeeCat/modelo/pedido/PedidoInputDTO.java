@@ -4,6 +4,9 @@ import com.CoffeeCat.modelo.lineapedido.LineaPedidoInputDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -11,7 +14,9 @@ import java.util.List;
 public class PedidoInputDTO {
 
     private String fecha_pedido;
-    private Float precio;
+    private Double precio;
+    private String hora;
+    private String minutos;
     private String metodoPago;
     private Boolean entregado;
     private String id_usuario;
@@ -19,7 +24,14 @@ public class PedidoInputDTO {
 
     public Pedido pedido() throws Exception{
         Pedido pedido = new Pedido();
-        pedido.setFecha(this.getFecha_pedido());
+        try {
+            Date fecha = new SimpleDateFormat("dd/MM/yyyy").parse(this.getFecha_pedido());
+            pedido.setFecha(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        pedido.setHora(this.getHora());
+        pedido.setMinutos(this.getMinutos());
         pedido.setPrecio(this.getPrecio());
         pedido.setMetodoPago(MetodoPago.getMetodo(this.getMetodoPago()));
         pedido.setEntregado(false);

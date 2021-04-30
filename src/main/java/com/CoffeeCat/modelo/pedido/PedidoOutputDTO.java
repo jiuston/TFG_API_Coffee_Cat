@@ -16,7 +16,9 @@ public class PedidoOutputDTO {
 
     private String id;
     private String fecha_pedido;
-    private Float precio;
+    private String hora;
+    private String minutos;
+    private Double precio;
     private String metodoPago;
     private String id_usuario;
     private List<LineaPedido> lineas;
@@ -24,7 +26,10 @@ public class PedidoOutputDTO {
     public PedidoOutputDTO(Pedido pedido){
         if (pedido==null) return;
         this.setId(pedido.getId());
-        this.setFecha_pedido(pedido.getFecha());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        this.setFecha_pedido(sdf.format(pedido.getFecha()));
+        this.setHora(pedido.getHora());
+        this.setMinutos(pedido.getMinutos());
         this.setPrecio(pedido.getPrecio());
         this.setMetodoPago(pedido.getMetodoPago().getMetodo());
         this.setId_usuario(pedido.getUsuario().getId());

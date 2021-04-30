@@ -12,7 +12,7 @@ public class ProductoOutputDTO {
     private String id;
     private String nombre;
     private String desripcion;
-    private Float precio;
+    private Double precio;
     private String imagenUrl;
     private Boolean activo;
 

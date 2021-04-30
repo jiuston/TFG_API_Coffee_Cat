@@ -12,8 +12,9 @@ import java.util.Date;
 public class ReservaInputDTO {
 
     private String fecha;
-    private Double hora;
-    private Float precio;
+    private String hora;
+    private String minutos;
+    private Double precio;
     private String id_usuario;
 
 
@@ -26,6 +27,7 @@ public class ReservaInputDTO {
             e.printStackTrace();
         }
         reserva.setHora(this.getHora());
+        reserva.setMinutos(this.getMinutos());
         reserva.setPrecio(this.getPrecio());
         return reserva;
     }

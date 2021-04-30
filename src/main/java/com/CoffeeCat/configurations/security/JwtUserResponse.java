@@ -10,15 +10,15 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class JwtUserResponse extends Usuario {
+public class JwtUserResponse {
 
     private String token;
+    private Set<Rol> roles;
 
     @Builder(builderMethodName="jwtUserResponseBuilder")
-    public JwtUserResponse(String email, Set<Rol> roles, String token){
-        this.setEmail(email);
-        this.setRoles(roles);
+    public JwtUserResponse(String token, Set<Rol> roles){
         this.token=token;
+        this.roles = roles;
     }
 
 

@@ -32,7 +32,7 @@ public class Producto {
     private String id;
     private String nombre;
     private String descripcion;
-    private Float precio;
+    private Double precio;
 
     @Column(name = "imagen" , length = 4096000)
     @Lob()

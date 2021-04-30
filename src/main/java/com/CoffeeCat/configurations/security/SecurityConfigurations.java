@@ -41,6 +41,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.httpBasic().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().authorizeRequests()
+                .antMatchers(HttpMethod.GET,"/familias/imagen/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/gatos/imagen/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/productos/familia/imagen/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .anyRequest().authenticated().and().csrf().disable();

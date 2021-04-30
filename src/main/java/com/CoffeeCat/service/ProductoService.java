@@ -18,7 +18,7 @@ public class ProductoService extends BaseService<Producto, String, ProductoRepos
 
     private ProductoRepository productoRepository;
 
-    public Producto crearProducto(Producto producto, String nombre, String descripcion, Float precio, Boolean activo, MultipartFile file) throws IOException{
+    public Producto crearProducto(Producto producto, String nombre, String descripcion, Double precio, Boolean activo, MultipartFile file) throws IOException{
         producto.setNombre(nombre);
         producto.setDescripcion(descripcion);
         producto.setPrecio(precio);

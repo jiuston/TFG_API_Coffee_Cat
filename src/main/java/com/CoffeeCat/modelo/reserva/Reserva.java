@@ -30,9 +30,9 @@ public class Reserva {
     private String id;
     @Temporal(TemporalType.DATE)
     private Date fecha;
-
-    private Double hora;
-    private Float precio;
+    private String hora;
+    private String minutos;
+    private Double precio;
 
     @ManyToOne
     private Usuario usuario;

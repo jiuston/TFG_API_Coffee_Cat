@@ -11,7 +11,7 @@ public class ProductoOutputDTO {
 
     private String id;
     private String nombre;
-    private String desripcion;
+    private String descripcion;
     private Double precio;
     private String imagenUrl;
     private Boolean activo;
@@ -19,7 +19,7 @@ public class ProductoOutputDTO {
     public ProductoOutputDTO(Producto producto){
         this.setId(producto.getId());
         this.setNombre(producto.getNombre());
-        this.setDesripcion(producto.getDescripcion());
+        this.setDescripcion(producto.getDescripcion());
         this.setPrecio(producto.getPrecio());
         this.setActivo(producto.getActivo());
         this.setImagenUrl("https://coffee-cat.herokuapp.com/productos/familia/imagen/"+producto.getId());

@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,10 +32,11 @@ public class ProductoController {
     private FamiliaService familiaService;
 
     @GetMapping("/familia/{id_familia}")
+    @Transactional
     public ResponseEntity<?> getProductosPorFamilia(@PathVariable String id_familia) {
         try {
-            Familia familia = familiaService.findById(id_familia).orElseThrow(() -> new Exception("Familia con id " + id_familia + " no encontrada"));
-            List<Producto> productos = productoService.findByFamilia(familia);
+            //Familia familia = familiaService.findById(id_familia).orElseThrow(() -> new Exception("Familia con id " + id_familia + " no encontrada"));
+            List<Producto> productos = productoService.findByFamiliaId(id_familia);
             List<ProductoOutputDTO> productosDTO = new ArrayList<>();
             for (Producto producto : productos) {
                 productosDTO.add(new ProductoOutputDTO(producto));

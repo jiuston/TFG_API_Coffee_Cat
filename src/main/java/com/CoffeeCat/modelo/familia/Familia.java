@@ -2,16 +2,15 @@ package com.CoffeeCat.modelo.familia;
 
 import com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator;
 import com.CoffeeCat.modelo.producto.Producto;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -35,4 +34,12 @@ public class Familia {
     @OneToMany(mappedBy = "familia")
     private List<Producto> productos;
 
+    @Override
+    public String toString() {
+        return "Familia{" +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", productos=" + productos +
+                '}';
+    }
 }

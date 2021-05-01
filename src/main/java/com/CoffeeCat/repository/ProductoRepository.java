@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, String> {
 
-    List<Producto> findByFamilia(Familia familia);
+    List<Producto> findByFamiliaId(String id);
 
 
 

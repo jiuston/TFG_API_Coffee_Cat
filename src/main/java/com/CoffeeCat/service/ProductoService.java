@@ -28,5 +28,5 @@ public class ProductoService extends BaseService<Producto, String, ProductoRepos
         return producto;
     }
 
-    public List<Producto> findByFamilia(Familia familia) { return productoRepository.findByFamilia(familia);}
+    public List<Producto> findByFamiliaId(String id) { return productoRepository.findByFamiliaId(id);}
 }

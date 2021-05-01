@@ -32,10 +32,9 @@ public class ProductoController {
     private FamiliaService familiaService;
 
     @GetMapping("/familia/{id_familia}")
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getProductosPorFamilia(@PathVariable String id_familia) {
         try {
-            //Familia familia = familiaService.findById(id_familia).orElseThrow(() -> new Exception("Familia con id " + id_familia + " no encontrada"));
             List<Producto> productos = productoService.findByFamiliaId(id_familia);
             List<ProductoOutputDTO> productosDTO = new ArrayList<>();
             for (Producto producto : productos) {

@@ -12,11 +12,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class JwtUserResponse {
 
+    private String idUsuario;
     private String token;
     private Set<Rol> roles;
 
     @Builder(builderMethodName="jwtUserResponseBuilder")
-    public JwtUserResponse(String token, Set<Rol> roles){
+    public JwtUserResponse(String idUsuario,String token, Set<Rol> roles){
+        this.idUsuario=idUsuario;
         this.token=token;
         this.roles = roles;
     }

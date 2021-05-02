@@ -43,6 +43,7 @@ public class AuthenticationController {
     private JwtUserResponse convertUserEntityAndTokenToJwtUserResponse(Usuario user, String jwtToken) {
         return JwtUserResponse
                 .jwtUserResponseBuilder()
+                .idUsuario(user.getId())
                 .roles(user.getRoles())
                 .token(jwtToken)
                 .build();

@@ -16,7 +16,7 @@ public class ReservaService extends BaseService<Reserva, String, ReservaReposito
 
     private final ReservaRepository reservaRepository;
 
-    public Optional<Reserva> findByUsuario(Usuario usuario){ return reservaRepository.findByUsuario(usuario);}
+    public Optional<Reserva> findByUsuarioId(String id){ return reservaRepository.findByUsuarioId(id);}
 
     public List<Reserva> findByFecha(Date fecha){
         return reservaRepository.findByFecha(fecha);

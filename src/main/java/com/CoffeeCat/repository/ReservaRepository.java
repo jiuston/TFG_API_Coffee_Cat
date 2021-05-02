@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface ReservaRepository extends JpaRepository<Reserva, String> {
 
     List<Reserva> findByFecha(Date fecha);
-    Optional<Reserva> findByUsuario(Usuario usuario);
+    Optional<Reserva> findByUsuarioId(String id);
 }

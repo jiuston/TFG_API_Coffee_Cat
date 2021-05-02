@@ -48,10 +48,9 @@ public class ReservaController {
     @GetMapping("/{idUsuario}")
     public ResponseEntity<?> getReservaByUsuario(@PathVariable String idUsuario) {
         try {
-            Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con encontrado con el id " + idUsuario));
-            Optional<Reserva> reservaOPT = reservaService.findByUsuario(usuario);
-            if (reservaOPT.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(reservaOPT.get());
+            Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElse(null);
+            if (reserva!=null) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ReservaOutPutDTO(reserva));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -64,7 +63,7 @@ public class ReservaController {
     public ResponseEntity<?> postReserva(@RequestBody ReservaInputDTO reservaInputDTO) {
         try {
             Usuario usuario = usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
-            Reserva reserva = reservaService.findByUsuario(usuario).orElse(null);
+            Reserva reserva = reservaService.findByUsuarioId(reservaInputDTO.getId_usuario()).orElse(null);
             if (reserva != null) throw new Exception("Este usuario ya tiene una reserva");
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(reservaInputDTO.getFecha());
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
@@ -88,7 +87,7 @@ public class ReservaController {
     public ResponseEntity<?> deleteReserva(@RequestParam String idUsuario) {
         try {
             Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no encontrado"));
-            Reserva reserva = reservaService.findByUsuario(usuario).orElseThrow(() -> new Exception("Este usuario no tiene reservas"));
+            Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElseThrow(() -> new Exception("Este usuario no tiene reservas"));
             reservaService.delete(reserva);
             return ResponseEntity.status(HttpStatus.OK).body("Borrada la reserva de " + usuario.getNombre());
         } catch (Exception e) {

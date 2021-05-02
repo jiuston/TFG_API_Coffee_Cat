@@ -64,7 +64,7 @@ public class ReservaController {
         try {
             Usuario usuario = usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
             Reserva reserva = reservaService.findByUsuarioId(reservaInputDTO.getId_usuario()).orElse(null);
-            if (reserva != null) throw new Exception("Este usuario ya tiene una reserva");
+            if (reserva != null) throw new Exception("Ya tienes una reserva");
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(reservaInputDTO.getFecha());
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
             for (Reserva r : reservas) {

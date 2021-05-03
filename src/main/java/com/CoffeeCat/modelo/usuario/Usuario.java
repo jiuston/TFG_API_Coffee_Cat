@@ -42,7 +42,7 @@ public class Usuario implements UserDetails {
     private String comentario_admin;
 
     @Column
-    private String  tokenNuevaPass;
+    private String tokenNuevaPass;
 
     @OneToMany(mappedBy = "usuario")
     private List<Reserva> reservas;

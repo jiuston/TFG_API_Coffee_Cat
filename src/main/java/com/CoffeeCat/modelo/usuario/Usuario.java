@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +40,9 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Rol> roles;
     private String comentario_admin;
+
+    @Column
+    private String  tokenNuevaPass;
 
     @OneToMany(mappedBy = "usuario")
     private List<Reserva> reservas;

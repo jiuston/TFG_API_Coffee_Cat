@@ -30,6 +30,17 @@ public class UsuarioService extends BaseService<Usuario,String, UsuarioRepositor
             roles.add(Rol.USER);
             usuario.setRoles(roles);
         }
-        return usuarioRepository.save(usuario);
+        return usuarioRepository.saveAndFlush(usuario);
     }
+
+    public void modificarPassword(Usuario usuario, String pass, String repitePass) throws Exception {
+        if (pass.equals(repitePass)) {
+            usuario.setPassword(passwordEncoder.encode(pass));
+            usuario.setTokenNuevaPass(null);
+            usuarioRepository.saveAndFlush(usuario);
+        }else {
+            throw new Exception("Las contraseñas no coinciden");
+        }
+    }
+
 }

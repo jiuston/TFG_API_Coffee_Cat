@@ -98,7 +98,7 @@ public class UsuarioController {
             Usuario usuario = usuarioService.findByEmail(resetPass.getEmail()).orElseThrow(() -> new Exception("Usuario con email " + resetPass.getEmail() + " no existe"));
             if (usuario.getTokenNuevaPass().equals(resetPass.getToken())) {
                 usuarioService.modificarPassword(usuario, resetPass.getPass(), resetPass.getRepitePass());
-                return ResponseEntity.status(HttpStatus.OK).body("Contraseña cambiada");
+                return ResponseEntity.status(HttpStatus.OK).body(new UsuarioOutputDTO(usuario));
             }
             else throw new Exception("El codigo no coincide!");
         } catch (Exception e) {

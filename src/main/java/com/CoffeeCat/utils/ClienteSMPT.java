@@ -16,9 +16,9 @@ public class ClienteSMPT {
     private String asunto;
 
     public ClienteSMPT(){
-        servidor="smpt.googlemail.com";
-        nombre="";
-        password="";
+        servidor="smtp.gmail.com";
+        nombre="noreply.coffeecat";
+        password="noreplyCoffeeCat";
         puerto=465;
         remitente="no-reply.coffeecat@gmail.com";
         asunto="Cambiar la contraseña de su cuenta CoffeeCat";

@@ -68,7 +68,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuarios/creartokenpass")
-    public ResponseEntity<?> createTokenResetPassword(@RequestParam (name = "email") String email, RequestEntity<?>request){
+    public ResponseEntity<?> createTokenResetPassword(@RequestParam (name = "email") String email){
         try {
             Usuario usuario=usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con email " + email + " no existe"));
             String token=usuarioService.generarToken(usuario);
@@ -92,7 +92,7 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping("/usuarios/resetpassword/")
+    @PostMapping("/usuarios/resetpassword")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPass resetPass) {
         try {
             Usuario usuario = usuarioService.findByEmail(resetPass.getEmail()).orElseThrow(() -> new Exception("Usuario con email " + resetPass.getEmail() + " no existe"));

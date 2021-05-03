@@ -48,6 +48,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/productos/familia/imagen/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuarios/creartokenpass").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuarios/resetpassword/**").permitAll()
                 .anyRequest().authenticated().and().csrf().disable();
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }

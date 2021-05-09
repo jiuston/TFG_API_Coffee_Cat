@@ -1,11 +1,13 @@
 package com.CoffeeCat.modelo.pedido;
 
+import com.CoffeeCat.modelo.lineapedido.LineaPedido;
 import com.CoffeeCat.modelo.lineapedido.LineaPedidoInputDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +37,6 @@ public class PedidoInputDTO {
         pedido.setPrecio(this.getPrecio());
         pedido.setMetodoPago(MetodoPago.getMetodo(this.getMetodoPago()));
         pedido.setEntregado(false);
-        //pedido.setLineaPedido(lineas);
         return pedido;
     }
 

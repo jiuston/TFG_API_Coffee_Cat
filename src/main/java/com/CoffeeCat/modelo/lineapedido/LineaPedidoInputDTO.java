@@ -10,4 +10,5 @@ public class LineaPedidoInputDTO {
     private Integer numeroLinea;
     private String id_producto;
     private Integer cantidad;
+
 }

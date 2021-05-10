@@ -151,7 +151,7 @@ public class PedidoController {
             if (pedido.getEntregado()) throw new Exception("No se puede borrar un pedido que ya se ha entregado.");
             else {
                 pedidoService.deleteById(id_pedido);
-                return ResponseEntity.status(HttpStatus.OK).body("Borrado el pedido " + id_pedido);
+                return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedido));
             }
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

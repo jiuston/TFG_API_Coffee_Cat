@@ -90,7 +90,8 @@ public class PedidoController {
     public ResponseEntity<?> getPedidoById(@PathVariable String id_pedido) {
         try {
             Pedido pedido=pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
-            return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedido));
+            PedidoOutputDTO pedidoOutputDTO = new PedidoOutputDTO(pedido);
+            return ResponseEntity.status(HttpStatus.OK).body(pedidoOutputDTO.getLineas());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

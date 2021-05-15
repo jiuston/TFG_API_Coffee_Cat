@@ -35,6 +35,6 @@ public class LineaPedido {
     @ManyToOne
     private Producto productos;
     private Integer cantidad;
-    private Double precio_unit;
+    private Double precioLinea;
 
 }

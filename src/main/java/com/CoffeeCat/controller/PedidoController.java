@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
@@ -115,7 +114,7 @@ public class PedidoController {
                 LineaPedido lineaPedido = new LineaPedido();
                 lineaPedido.setProductos(producto);
                 lineaPedido.setCantidad(linea.getCantidad());
-                lineaPedido.setPrecio_unit(producto.getPrecio());
+                lineaPedido.setPrecioLinea(producto.getPrecio()*linea.getCantidad());
                 lineaPedido.setPedido(pedido);
                 lineaPedido.setNumero_linea(numLinea++);
                 lineaPedidoService.save(lineaPedido);

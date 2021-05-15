@@ -3,6 +3,7 @@ package com.CoffeeCat.controller;
 import com.CoffeeCat.modelo.gato.Gato;
 import com.CoffeeCat.modelo.gato.GatoOutputDTO;
 import com.CoffeeCat.service.GatoService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,11 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@AllArgsConstructor
 @RequestMapping("/gatos")
 public class GatoController {
 
-
-    @Autowired
-    private GatoService gatoService;
+    private final GatoService gatoService;
 
     @GetMapping
     public ResponseEntity<?> getGatos() {

@@ -6,6 +6,7 @@ import com.CoffeeCat.modelo.reserva.ReservaOutPutDTO;
 import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.service.ReservaService;
 import com.CoffeeCat.service.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,12 @@ import java.util.function.Supplier;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@AllArgsConstructor
 @RequestMapping("/reservas")
 public class ReservaController {
 
-    @Autowired
-    private ReservaService reservaService;
-    @Autowired
-    private UsuarioService usuarioService;
+    private final ReservaService reservaService;
+    private final UsuarioService usuarioService;
 
     @GetMapping("")
     public ResponseEntity<?> getReservasByFecha(@RequestParam String fecha) {

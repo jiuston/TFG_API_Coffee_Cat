@@ -13,6 +13,7 @@ import com.CoffeeCat.service.PedidoService;
 import com.CoffeeCat.service.ProductoService;
 import com.CoffeeCat.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +25,14 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@AllArgsConstructor
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    @Autowired
-    private PedidoService pedidoService;
-    @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
-    private ProductoService productoService;
-    @Autowired
-    private LineaPedidoService lineaPedidoService;
+    private final PedidoService pedidoService;
+    private final UsuarioService usuarioService;
+    private final ProductoService productoService;
+    private final LineaPedidoService lineaPedidoService;
 
     @ApiOperation("Devuelve todos los pedidos para un dia concreto. Usado por los camareros")
     @GetMapping("/fecha/{fecha}")

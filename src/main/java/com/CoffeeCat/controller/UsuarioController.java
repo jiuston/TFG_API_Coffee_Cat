@@ -2,6 +2,7 @@ package com.CoffeeCat.controller;
 
 import com.CoffeeCat.modelo.usuario.*;
 import com.CoffeeCat.service.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,10 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@AllArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuarios/{id_usuario}")

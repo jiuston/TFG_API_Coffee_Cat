@@ -3,6 +3,7 @@ package com.CoffeeCat;
 import com.CoffeeCat.modelo.usuario.Rol;
 import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.service.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,10 +17,10 @@ import java.util.Set;
 import java.util.TimeZone;
 
 @SpringBootApplication
+@AllArgsConstructor
 public class CoffeeCatApplication implements CommandLineRunner {
 
-	@Autowired
-	private UsuarioService usuarioService;
+	private final UsuarioService usuarioService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoffeeCatApplication.class, args);

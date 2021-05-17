@@ -34,24 +34,24 @@ public class CoffeeCatApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		if (!usuarioService.findByEmail("admin@coffeecat.com").isPresent()){
+		if (!usuarioService.findByEmail("usuarioprimero@coffeecat.com").isPresent()){
 			Set<Rol> roles= new HashSet<>();
 			roles.add(Rol.ADMIN);
 			Usuario usuario=new Usuario();
 			usuario.setRoles(roles);
-			usuario.setEmail("admin@coffeecat.com");
-			usuario.setPassword("admin");
-			usuario.setNombre("admin");
+			usuario.setEmail("usuarioprimero@coffeecat.com");
+			usuario.setPassword("usuarioprimero");
+			usuario.setNombre("usuarioprimero");
 			usuarioService.createUsuario(usuario);
 		}
-		if (!usuarioService.findByEmail("user@coffeecat.com").isPresent()){
+		if (!usuarioService.findByEmail("usuariosegundo@coffeecat.com").isPresent()){
 			Set<Rol> roles= new HashSet<>();
 			roles.add(Rol.USER);
 			Usuario usuario=new Usuario();
 			usuario.setRoles(roles);
-			usuario.setEmail("user@coffeecat.com");
-			usuario.setPassword("user");
-			usuario.setNombre("user");
+			usuario.setEmail("usuariosegundo@coffeecat.com");
+			usuario.setPassword("usuariosegundo");
+			usuario.setNombre("usuariosegundo");
 			usuarioService.createUsuario(usuario);
 		}
 	}

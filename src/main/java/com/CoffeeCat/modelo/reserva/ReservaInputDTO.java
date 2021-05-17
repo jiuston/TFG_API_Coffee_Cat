@@ -15,7 +15,6 @@ public class ReservaInputDTO {
     private String hora;
     private String minutos;
     private Double precio;
-    private String id_usuario;
 
 
     public Reserva reserva(){

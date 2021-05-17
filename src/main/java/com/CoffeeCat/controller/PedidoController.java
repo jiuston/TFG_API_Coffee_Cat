@@ -17,10 +17,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,25 +39,32 @@ public class PedidoController {
     private final LineaPedidoService lineaPedidoService;
 
     @ApiOperation("Devuelve todos los pedidos para un dia concreto. Usado por los camareros")
-    @GetMapping("/fecha/{fecha}")
+    @GetMapping("/fecha")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPedidos(@PathVariable String fecha) {
+    public ResponseEntity<?> getPedidos(@RequestParam String fecha) {
+       try{
+           Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
+           List<Pedido> pedidos = pedidoService.findByFecha(fechaBuscada);
+           List<PedidoOutputDTO> pedidosOutputDTO = new ArrayList<>();
+           for (Pedido pedido : pedidos) {
+               pedidosOutputDTO.add(new PedidoOutputDTO(pedido));
+           }
+           return ResponseEntity.status(HttpStatus.OK).body(pedidosOutputDTO);
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+       }
 
-        List<Pedido> pedidos = pedidoService.findByFecha(fecha);
-        List<PedidoOutputDTO> pedidosOutputDTO = new ArrayList<>();
-        for (Pedido pedido : pedidos) {
-            pedidosOutputDTO.add(new PedidoOutputDTO(pedido));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(pedidosOutputDTO);
+
     }
 
     @ApiOperation("Devuelve el historico de pedidos de un usuario")
-    @GetMapping("/usuario/{id_usuario}")
+    @GetMapping("/usuario/historial")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPedidoByIdUsuario(@PathVariable String id_usuario) {
+    public ResponseEntity<?> getPedidoByIdUsuario() {
+        String idUsuario= getUserId();
         try {
-            usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
-            List<Pedido> pedidos =pedidoService.findByUsuarioId(id_usuario);
+            usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
+            List<Pedido> pedidos =pedidoService.findByUsuarioId(idUsuario);
             List<SimplePedidoOutputDTO> pedidosOutput = new ArrayList<>();
             for (Pedido p : pedidos) {
                 pedidosOutput.add(new SimplePedidoOutputDTO(p));
@@ -65,9 +76,10 @@ public class PedidoController {
     }
 
     @ApiOperation("Devuelve los números de los pedidos que no han sido aun completados")
-    @GetMapping("/usuario/{idUsuario}/pendiente")
+    @GetMapping("/usuario/pendiente")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPedidosPendientesByIdUsuario(@PathVariable String idUsuario){
+    public ResponseEntity<?> getPedidosPendientesByIdUsuario(){
+        String idUsuario= getUserId();
         try {
             usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
             List<Pedido> pedidosPendientes=pedidoService.findByUsuarioIdAndPending(idUsuario);
@@ -87,8 +99,8 @@ public class PedidoController {
     public ResponseEntity<?> getPedidoById(@PathVariable String id_pedido) {
         try {
             Pedido pedido=pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
-            PedidoOutputDTO pedidoOutputDTO = new PedidoOutputDTO(pedido);
-            return ResponseEntity.status(HttpStatus.OK).body(pedidoOutputDTO.getLineas());
+
+            return ResponseEntity.status(HttpStatus.OK).body(new PedidoOutputDTO(pedido));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -98,9 +110,9 @@ public class PedidoController {
     @PostMapping()
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> postPedido(@RequestBody PedidoInputDTO pedidoInputDTO) {
+        String IdUsuario= getUserId();
         try {
-            String idusuario = pedidoInputDTO.getId_usuario();
-            Usuario usuario = usuarioService.findById(idusuario).orElseThrow(() -> new Exception("No existe ese usuario"));
+            Usuario usuario = usuarioService.findById(IdUsuario).orElseThrow(() -> new Exception("No existe ese usuario"));
             Pedido pedido = pedidoInputDTO.pedido();
             pedido.setUsuario(usuario);
             pedidoService.save(pedido);
@@ -154,6 +166,13 @@ public class PedidoController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
+    }
+
+    private String getUserId(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return usuario.getId();
     }
 
 }

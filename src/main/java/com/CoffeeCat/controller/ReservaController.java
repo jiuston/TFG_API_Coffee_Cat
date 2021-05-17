@@ -10,8 +10,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,8 +48,9 @@ public class ReservaController {
         }
     }
 
-    @GetMapping("/{idUsuario}")
-    public ResponseEntity<?> getReservaByUsuario(@PathVariable String idUsuario) {
+    @GetMapping("/usuario")
+    public ResponseEntity<?> getReservaByUsuario() {
+            String idUsuario = getUserId();
         try {
             Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElse(null);
             if (reserva!=null) {
@@ -61,9 +65,10 @@ public class ReservaController {
 
     @PostMapping("")
     public ResponseEntity<?> postReserva(@RequestBody ReservaInputDTO reservaInputDTO) {
+        String idUsuario = getUserId();
         try {
-            Usuario usuario = usuarioService.findById(reservaInputDTO.getId_usuario()).orElseThrow(() -> new Exception("Usuario con id " + reservaInputDTO.getId_usuario() + " no existe"));
-            Reserva reserva = reservaService.findByUsuarioId(reservaInputDTO.getId_usuario()).orElse(null);
+            Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no existe"));
+            Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElse(null);
             if (reserva != null) throw new Exception("Ya tienes una reserva");
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(reservaInputDTO.getFecha());
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
@@ -84,7 +89,8 @@ public class ReservaController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteReserva(@RequestParam String idUsuario) {
+    public ResponseEntity<?> deleteReserva() {
+        String idUsuario = getUserId();
         try {
             Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no encontrado"));
             Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElseThrow(() -> new Exception("Este usuario no tiene reservas"));
@@ -94,6 +100,13 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
 
+    }
+
+    private String getUserId(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return usuario.getId();
     }
 
 }

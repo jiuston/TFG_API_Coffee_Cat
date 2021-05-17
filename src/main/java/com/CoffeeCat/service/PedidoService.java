@@ -17,7 +17,7 @@ public class PedidoService extends BaseService<Pedido, String, PedidoRepository>
 
     private final PedidoRepository pedidoRepository;
 
-    public List<Pedido> findByFecha(String fecha){
+    public List<Pedido> findByFecha(Date fecha){
         return pedidoRepository.findByFecha(fecha);
     }
 

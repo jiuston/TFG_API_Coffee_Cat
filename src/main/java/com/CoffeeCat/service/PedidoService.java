@@ -27,11 +27,6 @@ public class PedidoService extends BaseService<Pedido, String, PedidoRepository>
     }
 
     public List<Pedido> findByUsuarioIdAndPending(String idUsuario) {
-        List<Pedido> pedidos = findByUsuarioId(idUsuario);
-        List<Pedido> pedidosPendientes = new ArrayList<>();
-        for (Pedido p : pedidos) {
-            if (!p.getEntregado()) pedidosPendientes.add(p);
-        }
-        return pedidosPendientes;
+        return pedidoRepository.findByUsuarioIdAndPending(idUsuario);
     }
 }

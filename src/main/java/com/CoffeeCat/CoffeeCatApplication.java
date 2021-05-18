@@ -26,11 +26,7 @@ public class CoffeeCatApplication implements CommandLineRunner {
 		SpringApplication.run(CoffeeCatApplication.class, args);
 	}
 
-	@PostConstruct
-	public void init() {
-		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"));
-	}
+
 
 	@Override
 	public void run(String... args) throws Exception {

@@ -23,7 +23,7 @@ public class JwtTokenProvider {
     public static final String TOKEN_TYPE = "JWT";
     @Value("${jwt.secret:EnUnLugarDeLaManchaDeCuyoNombreNoQuieroAcordarmeNoHaMuchoTiempoQueViviaUnHidalgo}")
     private String jwtSecreto;
-    @Value("${jwt.token-expiration:1800000}") // milisegundos
+    @Value("${jwt.token-expiration:7200000}") // milisegundos
     private int jwtDuracionToken;
 
     public String generateToken(Authentication authentication) {

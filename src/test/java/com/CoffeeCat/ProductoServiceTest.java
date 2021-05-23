@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.event.annotation.BeforeTestClass;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,9 @@ public class ProductoServiceTest {
         producto.setId("PROD0001");
         producto.setNombre("Cafe de prueba");
         producto.setActivo(true);
-        Mockito.when(productoRepository.findByFamiliaId("FAM0001")).thenReturn(List.of(producto));
+        List<Producto> productos = new ArrayList<>();
+        productos.add(producto);
+        Mockito.when(productoRepository.findByFamiliaId("FAM0001")).thenReturn(productos);
 
         Producto p = productoService.findByFamiliaId("FAM0001").get(0);
         Assertions.assertEquals("Cafe de prueba",p.getNombre());

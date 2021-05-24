@@ -3,9 +3,11 @@ package com.CoffeeCat.utils;
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
 import org.apache.commons.net.smtp.SimpleSMTPHeader;
+import org.springframework.stereotype.Component;
 
 import java.io.Writer;
 
+@Component
 public class ClienteSMPT {
 
     private String servidor;

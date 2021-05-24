@@ -21,6 +21,8 @@ public class UsuarioService extends BaseService<Usuario,String, UsuarioRepositor
     private UsuarioRepository usuarioRepository;
     @Lazy
     private PasswordEncoder passwordEncoder;
+    @Lazy
+    private ClienteSMPT clienteSMPT;
 
     public Optional<Usuario> findByEmail(String email){return usuarioRepository.findByEmail(email);}
 
@@ -53,7 +55,6 @@ public class UsuarioService extends BaseService<Usuario,String, UsuarioRepositor
     }
 
     public boolean mandarEmail(String email, String token) {
-        ClienteSMPT clienteSMPT = new ClienteSMPT();
         return clienteSMPT.enviarCorreoCambioPass(email,token);
     }
 }

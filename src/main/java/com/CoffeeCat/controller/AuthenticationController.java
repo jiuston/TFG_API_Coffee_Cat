@@ -5,6 +5,7 @@ import com.CoffeeCat.configurations.security.JwtUserResponse;
 import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.modelo.usuario.UsuarioInputLoginDTO;
 import com.CoffeeCat.modelo.usuario.UsuarioOutputDTO;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = "Autenticacion")
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;

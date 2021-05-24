@@ -6,6 +6,7 @@ import com.CoffeeCat.modelo.producto.Producto;
 import com.CoffeeCat.modelo.producto.ProductoOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import com.CoffeeCat.service.ProductoService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@Api(tags = "Productos")
 @AllArgsConstructor
 @RequestMapping("/productos")
 public class ProductoController {

@@ -12,6 +12,7 @@ import com.CoffeeCat.service.LineaPedidoService;
 import com.CoffeeCat.service.PedidoService;
 import com.CoffeeCat.service.ProductoService;
 import com.CoffeeCat.service.UsuarioService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 @AllArgsConstructor
+@Api(tags = "Pedidos")
 @RequestMapping("/pedidos")
 public class PedidoController {
 

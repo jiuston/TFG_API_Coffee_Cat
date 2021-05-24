@@ -2,6 +2,7 @@ package com.CoffeeCat.controller;
 
 import com.CoffeeCat.modelo.usuario.*;
 import com.CoffeeCat.service.UsuarioService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@Api(tags = "Usuarios")
 @AllArgsConstructor
 public class UsuarioController {
 

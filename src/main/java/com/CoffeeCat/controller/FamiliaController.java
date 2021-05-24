@@ -3,6 +3,8 @@ package com.CoffeeCat.controller;
 import com.CoffeeCat.modelo.familia.Familia;
 import com.CoffeeCat.modelo.familia.FamiliaOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +20,13 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PUT })
+@Api(tags = "Familias")
 @AllArgsConstructor
 public class FamiliaController {
 
     private final FamiliaService familiaService;
 
+    @ApiOperation("Devuelve todas las familias de productos que hay actualmente")
     @GetMapping("/familias")
     public ResponseEntity<?> getFamilias(){
         List<Familia> familias=familiaService.findAll();
@@ -35,6 +39,7 @@ public class FamiliaController {
         return ResponseEntity.status(HttpStatus.OK).body(familiasOutputDTO);
     }
 
+    @ApiOperation("Devuelve la imagen de la familia que se le pasa por parametro")
     @GetMapping(value="familias/imagen/{id_familia}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImagenFamilias(@PathVariable String id_familia){
         try {
@@ -48,6 +53,7 @@ public class FamiliaController {
         }
     }
 
+    @ApiOperation("Añade una familia nueva")
     @PostMapping("/familias")
     public ResponseEntity<?> postFamilia(@RequestParam String nombre, @RequestParam("file") MultipartFile file ) {
         Familia familia = new Familia();
@@ -63,6 +69,7 @@ public class FamiliaController {
         }
     }
 
+    @ApiOperation("Borra la familia que se le pase por parametro si existe")
     @DeleteMapping("/familias/{id}")
     public ResponseEntity<?> deleteFamilia(@PathVariable String id){
         if (familiaService.findById(id).isPresent()){

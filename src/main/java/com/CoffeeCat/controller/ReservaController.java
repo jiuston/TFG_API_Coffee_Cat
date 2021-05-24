@@ -6,6 +6,7 @@ import com.CoffeeCat.modelo.reserva.ReservaOutPutDTO;
 import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.service.ReservaService;
 import com.CoffeeCat.service.UsuarioService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.util.function.Supplier;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@Api(tags = "Reservas")
 @AllArgsConstructor
 @RequestMapping("/reservas")
 public class ReservaController {

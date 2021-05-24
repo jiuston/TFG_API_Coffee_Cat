@@ -3,6 +3,8 @@ package com.CoffeeCat.controller;
 import com.CoffeeCat.modelo.gato.Gato;
 import com.CoffeeCat.modelo.gato.GatoOutputDTO;
 import com.CoffeeCat.service.GatoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,12 +21,14 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@Api(tags = "Gatos")
 @AllArgsConstructor
 @RequestMapping("/gatos")
 public class GatoController {
 
     private final GatoService gatoService;
 
+    @ApiOperation("Devuelve todos los gatos que hay actualmente en el local")
     @GetMapping
     public ResponseEntity<?> getGatos() {
         List<Gato> gatos = gatoService.findAll();

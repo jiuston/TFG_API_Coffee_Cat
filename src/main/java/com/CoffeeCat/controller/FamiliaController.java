@@ -5,12 +5,14 @@ import com.CoffeeCat.modelo.familia.FamiliaOutputDTO;
 import com.CoffeeCat.service.FamiliaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +43,7 @@ public class FamiliaController {
 
     @ApiOperation("Devuelve la imagen de la familia que se le pasa por parametro")
     @GetMapping(value="familias/imagen/{id_familia}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getImagenFamilias(@PathVariable String id_familia){
+    public ResponseEntity<byte[]> getImagenFamilias(@ApiParam(example = "FAM00000028" ,value = "ID de la familia de la imagen que quiero") @PathVariable String id_familia){
         try {
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG);
@@ -53,9 +55,10 @@ public class FamiliaController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Añade una familia nueva")
     @PostMapping("/familias")
-    public ResponseEntity<?> postFamilia(@RequestParam String nombre, @RequestParam("file") MultipartFile file ) {
+    public ResponseEntity<?> postFamilia(@ApiParam(example = "Granizados" ,value = "El nombre de la nueva familia") @RequestParam String nombre, @ApiParam(value = "Imagen de la nueva familia") @RequestParam("file") MultipartFile file ) {
         Familia familia = new Familia();
         familia.setNombre(nombre);
         try {
@@ -69,9 +72,10 @@ public class FamiliaController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Borra la familia que se le pase por parametro si existe")
     @DeleteMapping("/familias/{id}")
-    public ResponseEntity<?> deleteFamilia(@PathVariable String id){
+    public ResponseEntity<?> deleteFamilia(@ApiParam(example = "FAM00000028" ,value = "ID de la familia a borrar") @PathVariable String id){
         if (familiaService.findById(id).isPresent()){
             familiaService.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();

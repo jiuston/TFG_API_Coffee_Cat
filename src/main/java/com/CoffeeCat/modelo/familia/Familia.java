@@ -2,6 +2,7 @@ package com.CoffeeCat.modelo.familia;
 
 import com.CoffeeCat.configurations.StringPrefixedSequenceIdGenerator;
 import com.CoffeeCat.modelo.producto.Producto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -31,7 +32,7 @@ public class Familia {
     @Column(name = "imagen" , length = 4096000)
     @Lob()
     private byte[] imagen;
-    @OneToMany(mappedBy = "familia")
+    @OneToMany(mappedBy = "familia", cascade = CascadeType.ALL)
     private List<Producto> productos;
 
     @Override

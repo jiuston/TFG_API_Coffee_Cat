@@ -3,6 +3,8 @@ package com.CoffeeCat.controller;
 import com.CoffeeCat.modelo.usuario.*;
 import com.CoffeeCat.service.UsuarioService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
@@ -24,9 +26,11 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    @ApiOperation("Devuelve el usuario actual")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuarios/{id_usuario}")
-    public ResponseEntity<?> getUsuarioById(@PathVariable String id_usuario) {
+    public ResponseEntity<?> getUsuarioById() {
+         String id_usuario=usuarioService.getUserId();
         try {
             Usuario usuario = usuarioService.findById(id_usuario).orElseThrow(() -> new Exception("Usuario con id " + id_usuario + " no existe"));
             return ResponseEntity.status(HttpStatus.OK).body(new UsuarioOutputDTO(usuario));
@@ -35,6 +39,7 @@ public class UsuarioController {
         }
     }
 
+    @ApiOperation("Registra un nuevo usuario con rol de USER")
     @PostMapping("/register")
     public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
         try {
@@ -48,6 +53,8 @@ public class UsuarioController {
 
     }
 
+    @ApiOperation("Devuelve todos los uuarios de la aplicacion")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/usuarios")
     public ResponseEntity<?> getUsuarios(){
         List<Usuario> usuarios = usuarioService.findAll();
@@ -59,8 +66,10 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioOutputDTOS);
     }
 
+    @ApiOperation("Borra un usuario en concreto")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/usuarios")
-    public ResponseEntity<?> deleteUsuarioByEmail(@RequestParam String email) {
+    public ResponseEntity<?> deleteUsuarioByEmail(@ApiParam(example = "El email del usuario a borrar") @RequestParam String email) {
         try {
             Usuario usuario = usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con email " + email + " no existe"));
             usuarioService.delete(usuario);
@@ -70,8 +79,9 @@ public class UsuarioController {
         }
     }
 
+    @ApiOperation("Genera un codigo y lo manda por correo al email introducido por el usuario")
     @PostMapping("/usuarios/creartokenpass")
-    public ResponseEntity<?> createTokenResetPassword(@RequestParam (name = "email") String email){
+    public ResponseEntity<?> createTokenResetPassword(@ApiParam(example = "El email al que mandar el token") @RequestParam (name = "email") String email){
         try {
             Usuario usuario=usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con email " + email + " no existe"));
             String token=usuarioService.generarToken(usuario);
@@ -84,8 +94,9 @@ public class UsuarioController {
         }
     }
 
+    @ApiOperation("Comprueba el token antes de permitir cambiar la contraseña")
     @PostMapping("/usuarios/resetpassword/{token}")
-    public ResponseEntity<?> checkToken(@PathVariable String token, @RequestParam String email){
+    public ResponseEntity<?> checkToken(@ApiParam(example = "El token que recibe el usuario al correo") @PathVariable String token, @ApiParam(example = "El email del usuario a cambiar la contraseña") @RequestParam String email){
         try {
             Usuario usuario=usuarioService.findByEmail(email).orElseThrow(() -> new Exception("Usuario con email " + email + " no existe"));
             if (usuario.getTokenNuevaPass().equals(token)) return ResponseEntity.status(HttpStatus.OK).build();
@@ -95,6 +106,7 @@ public class UsuarioController {
         }
     }
 
+    @ApiOperation("Cambia la contraseña del usuario")
     @PostMapping("/usuarios/resetpassword")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPass resetPass) {
         try {

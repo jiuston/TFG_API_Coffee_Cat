@@ -6,6 +6,8 @@ import com.CoffeeCat.repository.UsuarioRepository;
 import com.CoffeeCat.utils.ClienteSMPT;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UsuarioService extends BaseService<Usuario,String, UsuarioRepository> {
 
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
     @Lazy
-    private PasswordEncoder passwordEncoder;
-    @Lazy
-    private ClienteSMPT clienteSMPT;
+    private final ClienteSMPT clienteSMPT;
 
     public Optional<Usuario> findByEmail(String email){return usuarioRepository.findByEmail(email);}
 
@@ -52,6 +53,17 @@ public class UsuarioService extends BaseService<Usuario,String, UsuarioRepositor
         usuario.setTokenNuevaPass(token);
         usuarioRepository.saveAndFlush(usuario);
         return token;
+    }
+
+    /**
+     * Devuelve el identificador del usuario que hace la peticion
+     * @return el ID del usuario, ej: "US00000001"
+     */
+    public String getUserId(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return usuario.getId();
     }
 
     public boolean mandarEmail(String email, String token) {

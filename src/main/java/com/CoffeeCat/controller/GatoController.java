@@ -5,12 +5,14 @@ import com.CoffeeCat.modelo.gato.GatoOutputDTO;
 import com.CoffeeCat.service.GatoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,8 +41,9 @@ public class GatoController {
         return ResponseEntity.status(HttpStatus.OK).body(gatosOutputDTO);
     }
 
+    @ApiOperation("Devuelve la imagen que corresponda al gato que se requiere por variable")
     @GetMapping(value = "/imagen/{id_gato}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getImagenGato(@PathVariable String id_gato) {
+    public ResponseEntity<?> getImagenGato(@ApiParam(example = "GAT00000023" ,value = "ID del gato del que quiero la imagen") @PathVariable String id_gato) {
         try {
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG);
@@ -52,8 +55,9 @@ public class GatoController {
         }
     }
 
+    @ApiOperation("Devuelve el gato que se requiere por su ID")
     @GetMapping("/{id_gato}")
-    public ResponseEntity<?> getGatoById(@PathVariable String id_gato) {
+    public ResponseEntity<?> getGatoById(@ApiParam(example = "GAT00000023" ,value = "ID del gato") @PathVariable String id_gato) {
         try {
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
             return ResponseEntity.status(HttpStatus.OK).body(new GatoOutputDTO(gato));
@@ -62,7 +66,9 @@ public class GatoController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
+    @ApiOperation("Añade un gato nuevo a la base de datos en función de los parametros que se le pasen. La fecha de nacimiento no es obligatoria")
     public ResponseEntity<?> postGato(@RequestParam String nombre, String fecha_nacimiento, @RequestParam String sexo, @RequestParam String historia, @RequestParam MultipartFile file) {
         Gato gato = new Gato();
         gato.setAdoptado(false);
@@ -76,6 +82,8 @@ public class GatoController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation("Modifica la informacion de un gato")
     @PutMapping("/{id_gato}")
     public ResponseEntity<?> modificarGato(@PathVariable String id_gato, String nombre,  String fecha_nacimiento,  String sexo,  String historia,  MultipartFile file) {
         try {
@@ -91,8 +99,10 @@ public class GatoController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation("Modifica el estado de un gato a \"Adoptado\"")
     @PutMapping("/{id_gato}/estado")
-    public ResponseEntity<?> actualizarEstado(@PathVariable String id_gato, @RequestParam Boolean adoptado, Date fecha_adoptado) {
+    public ResponseEntity<?> actualizarEstado(@ApiParam(example = "GAT00000023" ,value = "ID del gato a modificar") @PathVariable String id_gato, @ApiParam(value = "Estado del gato") @RequestParam Boolean adoptado, @ApiParam(value = "28/05/2021",example = "Fecha de adopcion") Date fecha_adoptado) {
         try{
            Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
             gato.setAdoptado(adoptado);
@@ -107,8 +117,10 @@ public class GatoController {
 
 }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation("Elimina el gato correspondiente de la base de datos")
     @DeleteMapping("/{id_gato}")
-    public ResponseEntity<?> deleteById(@PathVariable String id_gato) {
+    public ResponseEntity<?> deleteById(@ApiParam(value = "GAT00000023", example = "Id del gato que quiero borrar") @PathVariable String id_gato) {
         try {
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
             gatoService.deleteById(id_gato);

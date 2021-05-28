@@ -39,7 +39,7 @@ public class Pedido {
 
     private Boolean entregado;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)

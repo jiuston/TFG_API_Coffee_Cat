@@ -7,10 +7,13 @@ import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.service.ReservaService;
 import com.CoffeeCat.service.UsuarioService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +37,10 @@ public class ReservaController {
     private final ReservaService reservaService;
     private final UsuarioService usuarioService;
 
+    @ApiOperation("Devuelve todas las reservas para una fecha dada")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
-    public ResponseEntity<?> getReservasByFecha(@RequestParam String fecha) {
+    public ResponseEntity<?> getReservasByFecha(@ApiParam(value = "28/05/2021",example = "Fecha de la que queremos saber las reservas") @RequestParam String fecha) {
         try {
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
             List<Reserva> reservas = reservaService.findByFecha(fechaBuscada);
@@ -50,9 +55,10 @@ public class ReservaController {
         }
     }
 
+    @ApiOperation("Devuelve las reservas de un usuario")
     @GetMapping("/usuario")
     public ResponseEntity<?> getReservaByUsuario() {
-            String idUsuario = getUserId();
+            String idUsuario = usuarioService.getUserId();
         try {
             Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElse(null);
             if (reserva!=null) {
@@ -65,9 +71,10 @@ public class ReservaController {
         }
     }
 
+    @ApiOperation("Hace una reserva para la fecha y hora especificadas")
     @PostMapping("")
     public ResponseEntity<?> postReserva(@RequestBody ReservaInputDTO reservaInputDTO) {
-        String idUsuario = getUserId();
+        String idUsuario = usuarioService.getUserId();
         try {
             Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no existe"));
             Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElse(null);
@@ -90,9 +97,10 @@ public class ReservaController {
 
     }
 
+    @ApiOperation("Borra la reserva del usuario que hace la peticion")
     @DeleteMapping("")
     public ResponseEntity<?> deleteReserva() {
-        String idUsuario = getUserId();
+        String idUsuario = usuarioService.getUserId();
         try {
             Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario con id " + idUsuario + " no encontrado"));
             Reserva reserva = reservaService.findByUsuarioId(idUsuario).orElseThrow(() -> new Exception("Este usuario no tiene reservas"));
@@ -102,13 +110,6 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
 
-    }
-
-    private String getUserId(){
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-        return usuario.getId();
     }
 
 }

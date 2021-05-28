@@ -6,6 +6,7 @@ import com.CoffeeCat.modelo.usuario.Usuario;
 import com.CoffeeCat.modelo.usuario.UsuarioInputLoginDTO;
 import com.CoffeeCat.modelo.usuario.UsuarioOutputDTO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,7 @@ public class AuthenticationController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
+    @ApiOperation("Login de usuarios")
     public JwtUserResponse login(@RequestBody UsuarioInputLoginDTO inputLoginDTO){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputLoginDTO.getEmail(), inputLoginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -36,6 +38,7 @@ public class AuthenticationController {
         return convertUserEntityAndTokenToJwtUserResponse(usuario, jwtToken);
     }
 
+    @ApiOperation("Devuelve el usuario que hace la petición")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/usuario/me")
     public UsuarioOutputDTO me(@AuthenticationPrincipal Usuario usuario){

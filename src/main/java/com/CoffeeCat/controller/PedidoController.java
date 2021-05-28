@@ -14,10 +14,12 @@ import com.CoffeeCat.service.ProductoService;
 import com.CoffeeCat.service.UsuarioService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +42,11 @@ public class PedidoController {
     private final ProductoService productoService;
     private final LineaPedidoService lineaPedidoService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Devuelve todos los pedidos para un dia concreto. Usado por los camareros")
     @GetMapping("/fecha")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPedidos(@RequestParam String fecha) {
+    public ResponseEntity<?> getPedidos(@ApiParam(value = "28/05/2021",example = "Fecha para buscar los pedidos") @RequestParam String fecha) {
        try{
            Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
            List<Pedido> pedidos = pedidoService.findByFecha(fechaBuscada);
@@ -63,7 +66,7 @@ public class PedidoController {
     @GetMapping("/usuario/historial")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getPedidoByIdUsuario() {
-        String idUsuario= getUserId();
+        String idUsuario= usuarioService.getUserId();
         try {
             usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
             List<Pedido> pedidos =pedidoService.findByUsuarioId(idUsuario);
@@ -81,7 +84,7 @@ public class PedidoController {
     @GetMapping("/usuario/pendiente")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getPedidosPendientesByIdUsuario(){
-        String idUsuario= getUserId();
+        String idUsuario= usuarioService.getUserId();
         try {
             usuarioService.findById(idUsuario).orElseThrow(() -> new Exception("Usuario no encontrado"));
             List<Pedido> pedidosPendientes=pedidoService.findByUsuarioIdAndPending(idUsuario);
@@ -98,7 +101,7 @@ public class PedidoController {
     @ApiOperation("Devuelve un pedido por completo")
     @GetMapping("/{id_pedido}")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPedidoById(@PathVariable String id_pedido) {
+    public ResponseEntity<?> getPedidoById(@ApiParam(value = "PED00000049",example = "Numero del pedido a buscar") @PathVariable String id_pedido) {
         try {
             Pedido pedido=pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
 
@@ -112,7 +115,7 @@ public class PedidoController {
     @PostMapping()
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> postPedido(@RequestBody PedidoInputDTO pedidoInputDTO) {
-        String IdUsuario= getUserId();
+        String IdUsuario= usuarioService.getUserId();
         try {
             Usuario usuario = usuarioService.findById(IdUsuario).orElseThrow(() -> new Exception("No existe ese usuario"));
             Pedido pedido = pedidoInputDTO.pedido();
@@ -144,7 +147,7 @@ public class PedidoController {
     @ApiOperation("Cambia el estado de un pedido a entregado")
     @PutMapping("/{id_pedido}")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> cambiarEstadoPedido(@PathVariable String id_pedido) {
+    public ResponseEntity<?> cambiarEstadoPedido(@ApiParam(value = "PED00000049",example = "Numero del pedido a completar") @PathVariable String id_pedido) {
         try {
             Pedido pedido = pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
             pedido.setEntregado(true);
@@ -157,7 +160,7 @@ public class PedidoController {
 
     @ApiOperation("Borra un pedido")
     @DeleteMapping("/{id_pedido}")
-    public ResponseEntity<?> borrarPedido(@PathVariable String id_pedido) {
+    public ResponseEntity<?> borrarPedido(@ApiParam(value = "PED00000049",example = "Numero del pedido a borrar") @PathVariable String id_pedido) {
         try {
             Pedido pedido = pedidoService.findById(id_pedido).orElseThrow(() -> new Exception("Pedido con id " + id_pedido + " no encontrado"));
             if (pedido.getEntregado()) throw new Exception("No se puede borrar un pedido que ya se ha entregado.");
@@ -170,11 +173,6 @@ public class PedidoController {
         }
     }
 
-    private String getUserId(){
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-        return usuario.getId();
-    }
+
 
 }

@@ -21,6 +21,7 @@ import java.util.TimeZone;
 public class CoffeeCatApplication implements CommandLineRunner {
 
 	private final UsuarioService usuarioService;
+	private final PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CoffeeCatApplication.class, args);
@@ -33,12 +34,13 @@ public class CoffeeCatApplication implements CommandLineRunner {
 		if (!usuarioService.findByEmail("usuarioprimero@coffeecat.com").isPresent()){
 			Set<Rol> roles= new HashSet<>();
 			roles.add(Rol.ADMIN);
+			roles.add(Rol.USER);
 			Usuario usuario=new Usuario();
 			usuario.setRoles(roles);
 			usuario.setEmail("usuarioprimero@coffeecat.com");
-			usuario.setPassword("usuarioprimero");
+			usuario.setPassword(passwordEncoder.encode("usuarioprimero"));
 			usuario.setNombre("usuarioprimero");
-			usuarioService.createUsuario(usuario);
+			usuarioService.save(usuario);
 		}
 		if (!usuarioService.findByEmail("usuariosegundo@coffeecat.com").isPresent()){
 			Set<Rol> roles= new HashSet<>();
@@ -47,8 +49,8 @@ public class CoffeeCatApplication implements CommandLineRunner {
 			usuario.setRoles(roles);
 			usuario.setEmail("usuariosegundo@coffeecat.com");
 			usuario.setPassword("usuariosegundo");
-			usuario.setNombre("usuariosegundo");
-			usuarioService.createUsuario(usuario);
+			usuario.setNombre(passwordEncoder.encode("usuariosegundo"));
+			usuarioService.save(usuario);
 		}
 	}
 }

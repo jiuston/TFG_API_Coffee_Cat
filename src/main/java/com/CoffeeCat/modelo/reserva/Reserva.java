@@ -34,6 +34,6 @@ public class Reserva {
     private String minutos;
     private Double precio;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Usuario usuario;
 }

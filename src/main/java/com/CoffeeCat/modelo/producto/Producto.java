@@ -39,7 +39,7 @@ public class Producto {
     private byte[] imagen;
     private Boolean activo;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Familia familia;
 
     @OneToMany(mappedBy = "productos",cascade = CascadeType.ALL)

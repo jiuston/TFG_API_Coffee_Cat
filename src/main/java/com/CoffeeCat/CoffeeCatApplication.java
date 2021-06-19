@@ -48,8 +48,8 @@ public class CoffeeCatApplication implements CommandLineRunner {
 			Usuario usuario=new Usuario();
 			usuario.setRoles(roles);
 			usuario.setEmail("usuariosegundo@coffeecat.com");
-			usuario.setPassword("usuariosegundo");
-			usuario.setNombre(passwordEncoder.encode("usuariosegundo"));
+			usuario.setPassword(passwordEncoder.encode("usuariosegundo"));
+			usuario.setNombre("usuariosegundo");
 			usuarioService.save(usuario);
 		}
 	}

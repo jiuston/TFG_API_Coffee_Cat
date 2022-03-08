@@ -51,6 +51,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/usuarios/creartokenpass").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios/resetpassword").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios/resetpassword/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated().and().csrf().disable();
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }

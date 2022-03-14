@@ -52,19 +52,15 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/usuarios/resetpassword").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios/resetpassword/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/configuration/security").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .anyRequest().authenticated().and().csrf().disable();
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs",
-                "/",
-                "/configuration/ui",
-                "/swagger-resources/**",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**");
     }
 
 }

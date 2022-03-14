@@ -12,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +43,7 @@ public class UsuarioController {
 
     @ApiOperation("Registra un nuevo usuario con rol de USER")
     @PostMapping("/register")
-    public ResponseEntity<?> registro(@RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
+    public ResponseEntity<?> registro(@Valid @RequestBody UsuarioRegistroInputDTO usuarioRegistro) {
         try {
             if(usuarioService.findByEmail(usuarioRegistro.getEmail()).isPresent()) throw new Exception("Un usuario con este email ya existe");
             Usuario nuevoUsuario = usuarioRegistro.usuario();

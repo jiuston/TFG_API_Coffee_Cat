@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,7 +70,7 @@ public class GatoController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     @ApiOperation("Añade un gato nuevo a la base de datos en función de los parametros que se le pasen. La fecha de nacimiento no es obligatoria")
-    public ResponseEntity<?> postGato(@RequestParam String nombre, String fecha_nacimiento, @RequestParam String sexo, @RequestParam String historia, @RequestParam MultipartFile file) {
+    public ResponseEntity<?> postGato(@RequestParam String nombre, String fecha_nacimiento, @RequestParam String sexo, @RequestParam String historia, @RequestPart MultipartFile file) {
         Gato gato = new Gato();
         gato.setAdoptado(false);
         try {
@@ -85,15 +86,14 @@ public class GatoController {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Modifica la informacion de un gato")
     @PutMapping("/{id_gato}")
-    public ResponseEntity<?> modificarGato(@PathVariable String id_gato, String nombre,  String fecha_nacimiento,  String sexo,  String historia,  MultipartFile file) {
+    public ResponseEntity<?> modificarGato(@PathVariable String id_gato, String nombre,  String fecha_nacimiento,  String sexo,  String historia, @RequestPart @Nullable MultipartFile file) {
         try {
             Gato gato = gatoService.findById(id_gato).orElseThrow(() -> new Exception("Gato no encontrado con id " + id_gato));
             gatoService.crearGato(gato, nombre, fecha_nacimiento, sexo, historia, file);
             gatoService.edit(gato);
             return ResponseEntity.status(HttpStatus.OK).body(new GatoOutputDTO(gato));
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

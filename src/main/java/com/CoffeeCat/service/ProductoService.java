@@ -19,12 +19,13 @@ public class ProductoService extends BaseService<Producto, String, ProductoRepos
     private ProductoRepository productoRepository;
 
     public Producto crearProducto(Producto producto, String nombre, String descripcion, Double precio, Boolean activo, MultipartFile file) throws IOException{
-        producto.setNombre(nombre);
-        producto.setDescripcion(descripcion);
-        producto.setPrecio(precio);
-        producto.setActivo(activo);
-        byte[] bytesImagen=file.getBytes();
-        producto.setImagen(bytesImagen);
+        if (nombre!=null) producto.setNombre(nombre);
+        if (descripcion!=null) producto.setDescripcion(descripcion);
+        if (precio!=null) producto.setPrecio(precio);
+        if (activo!=null)producto.setActivo(activo);
+        if (file!=null){
+             byte[] bytesImagen=file.getBytes();
+        producto.setImagen(bytesImagen);}
         return producto;
     }
 

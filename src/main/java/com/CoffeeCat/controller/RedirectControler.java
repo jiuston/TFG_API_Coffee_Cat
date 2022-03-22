@@ -10,12 +10,12 @@ import java.io.IOException;
 
 @RestController
 @Api(tags = "Redirect")
-public class Controler {
+public class RedirectControler {
 
     @GetMapping("/")
     @ApiOperation("Redireccion a la pagina de Swagger")
     public void redirectToSwagger(HttpServletResponse response) throws IOException {
-        response.sendRedirect("swagger-ui.html#/");
+        response.sendRedirect("swagger-ui/");
     }
 
 }

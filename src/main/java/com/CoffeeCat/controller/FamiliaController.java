@@ -58,7 +58,7 @@ public class FamiliaController {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Añade una familia nueva")
     @PostMapping("/familias")
-    public ResponseEntity<?> postFamilia(@ApiParam(example = "Granizados" ,value = "El nombre de la nueva familia") @RequestParam String nombre, @ApiParam(value = "Imagen de la nueva familia") @RequestParam("file") MultipartFile file ) {
+    public ResponseEntity<?> postFamilia(@ApiParam(example = "Granizados" ,value = "El nombre de la nueva familia") @RequestParam String nombre, @ApiParam(value = "Imagen de la nueva familia") @RequestPart("file") MultipartFile file ) {
         Familia familia = new Familia();
         familia.setNombre(nombre);
         try {

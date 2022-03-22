@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +80,7 @@ public class ProductoController {
     @ApiOperation("Agrega un producto a una categoria")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/familia/{id_familia}")
-    public ResponseEntity<?> postProducto(@PathVariable String id_familia, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Double precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> postProducto(@PathVariable String id_familia, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Double precio, @RequestParam Boolean activo, @RequestPart("file") MultipartFile file) {
         try {
             Familia familia = familiaService.findById(id_familia).orElseThrow(() -> new Exception("Familia con id " + id_familia + " no encontrada"));
             Producto producto = new Producto();
@@ -123,7 +124,7 @@ public class ProductoController {
     @ApiOperation("Edita un producto")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id_producto}")
-    public ResponseEntity<?> putProducto(@PathVariable String id_producto, @RequestParam String nombre, @RequestParam String descripcion, @RequestParam Double precio, @RequestParam Boolean activo, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> putProducto(@PathVariable String id_producto, String nombre,  String descripcion, Double precio, Boolean activo, @RequestPart("file") @Nullable MultipartFile file) {
         try {
             Producto producto = productoService.findById(id_producto).orElseThrow(() -> new Exception("No se encontró producto con id " + id_producto));
             productoService.crearProducto(producto, nombre, descripcion, precio, activo, file);
